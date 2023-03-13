@@ -1,14 +1,20 @@
+import { useContext, useState } from 'react'
+import { useRouter } from 'next/router'
+import Image from 'next/image'
 import Link from 'next/link'
+import { UIContext } from '@/context'
 import AppBar from '@mui/material/AppBar'
 import Badge from '@mui/material/Badge'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
-import Image from 'next/image'
+import 'animate.css'
 
 interface NavItem {
   title: string
@@ -18,10 +24,25 @@ interface NavItem {
 const navItems: NavItem[] = [
   { title: 'Men', href: '/category/men' },
   { title: 'Women', href: '/category/women' },
-  { title: 'Kids', href: '/category/kids' },
+  { title: 'Kids', href: '/category/kid' },
 ]
 
 export const Navbar = () => {
+  const router = useRouter()
+  const { pathname } = router
+  const { toggleSidebar } = useContext(UIContext)
+
+  const [search, setSearch] = useState('')
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+
+  const onSearch = () => {
+    if (setSearch.length === 0) {
+      return
+    }
+
+    router.push(`/search/${search}`)
+  }
+
   return (
     <AppBar>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -34,15 +55,42 @@ export const Navbar = () => {
             Shop
           </Typography>
         </Link>
-        <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: isSearchOpen ? 'none' : { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 2 }} className="animate__animated animate__fadeIn">
           {navItems.map((navItem) => (
             <Link key={navItem.title} href={navItem.href}>
-              <Button>{navItem.title}</Button>
+              <Button variant={pathname === navItem.href ? 'contained' : 'text'}>{navItem.title}</Button>
             </Link>
           ))}
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton>
+          {/* Small screens */}
+          {isSearchOpen ? (
+            <TextField
+              autoFocus
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyUp={(e) => e.key === 'Enter' && onSearch()}
+              variant="standard"
+              fullWidth
+              placeholder="Search"
+              autoComplete="off"
+              className="animate__animated animate__fadeIn"
+              sx={{ display: { xs: 'none', sm: 'flex' } }}
+              InputProps={{
+                endAdornment: (
+                  <IconButton onClick={() => setIsSearchOpen(false)}>
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                ),
+              }}
+            />
+          ) : (
+            <IconButton sx={{ display: { xs: 'none', sm: 'flex' } }} onClick={() => setIsSearchOpen(true)} className="animate__animated animate__fadeIn">
+              <SearchOutlinedIcon color="primary" />
+            </IconButton>
+          )}
+          {/* Large screens */}
+          <IconButton sx={{ display: { xs: 'flex', sm: 'none' } }} onClick={toggleSidebar}>
             <SearchOutlinedIcon color="primary" />
           </IconButton>
           <Link href="/cart">
@@ -52,7 +100,7 @@ export const Navbar = () => {
               </Badge>
             </IconButton>
           </Link>
-          <Button>Menu</Button>
+          <Button onClick={toggleSidebar}>Menu</Button>
         </Box>
       </Toolbar>
     </AppBar>

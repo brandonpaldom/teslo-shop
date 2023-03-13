@@ -1,11 +1,11 @@
 import { FC } from 'react'
 import Image from 'next/image'
 import { ItemCounter } from '../ui'
+import { initialData } from '@/database/products'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import { initialData } from '@/database/products'
 
 const productsInCart = [initialData.products[0], initialData.products[1], initialData.products[2]]
 

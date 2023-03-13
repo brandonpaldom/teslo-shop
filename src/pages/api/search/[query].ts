@@ -24,11 +24,13 @@ async function searchProducts(req: NextApiRequest, res: NextApiResponse<Data>) {
   query = query.toString().toLowerCase()
 
   await db.connect()
+
   const products = await Product.find({
     $text: { $search: query },
   })
     .select('images inStock price slug title -_id')
     .lean()
+
   await db.disconnect()
 
   res.status(200).json(products)

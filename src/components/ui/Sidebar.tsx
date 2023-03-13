@@ -1,6 +1,10 @@
+import { useContext, useState } from 'react'
+import { useRouter } from 'next/router'
+import { UIContext } from '@/context'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
+import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -36,7 +40,7 @@ const profileOptions: Option[] = [
 const categoryOptions: Option[] = [
   { label: 'Men', icon: <MaleOutlinedIcon />, link: '/category/men' },
   { label: 'Women', icon: <FemaleOutlinedIcon />, link: '/category/women' },
-  { label: 'Kids', icon: <ChildCareOutlinedIcon />, link: '/category/kids' },
+  { label: 'Kids', icon: <ChildCareOutlinedIcon />, link: '/category/kid' },
 ]
 
 const adminOptions: Option[] = [
@@ -46,17 +50,52 @@ const adminOptions: Option[] = [
 ]
 
 export const Sidebar = () => {
+  const router = useRouter()
+  const { isSidebarOpen, toggleSidebar } = useContext(UIContext)
+
+  const [search, setSearch] = useState('')
+
+  const onSearch = () => {
+    if (setSearch.length === 0) {
+      return
+    }
+
+    handleCategoryClick(`/search/${search}`)
+  }
+
+  const handleCategoryClick = (url: string) => {
+    toggleSidebar()
+    router.push(url)
+  }
+
   return (
-    <Drawer anchor="right" open={false} sx={{ backdropFilter: 'blur(4px)', transition: 'all 0.3s ease-in-out' }}>
+    <Drawer anchor="right" open={isSidebarOpen} sx={{ backdropFilter: 'blur(4px)', transition: 'all 0.3s ease-in-out' }} onClose={toggleSidebar}>
       <Box sx={{ width: 320, padding: 2 }}>
         <List>
           <ListItem disablePadding>
-            <TextField variant="standard" fullWidth sx={{ m: 2 }} placeholder="Search" InputProps={{ endAdornment: <SearchOutlinedIcon /> }} />
+            <TextField
+              autoFocus
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyUp={(e) => e.key === 'Enter' && onSearch()}
+              variant="standard"
+              fullWidth
+              sx={{ m: 2 }}
+              placeholder="Search"
+              autoComplete="off"
+              InputProps={{
+                endAdornment: (
+                  <IconButton onClick={onSearch}>
+                    <SearchOutlinedIcon />
+                  </IconButton>
+                ),
+              }}
+            />
           </ListItem>
         </List>
         <List sx={{ display: { xs: 'block', sm: 'none' } }}>
           {categoryOptions.map((option) => (
-            <ListItem key={option.label} disablePadding>
+            <ListItem key={option.label} disablePadding onClick={() => handleCategoryClick(option.link)}>
               <ListItemButton>
                 <ListItemIcon>{option.icon}</ListItemIcon>
                 <ListItemText primary={option.label} />
