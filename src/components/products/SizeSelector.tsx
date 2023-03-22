@@ -1,18 +1,19 @@
 import { FC } from 'react'
-import { SizesInterface } from '@/interfaces'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { SizesInterface } from '@/interfaces'
 
 interface Props {
-  selectedSize?: string
+  selectedSize?: SizesInterface
   sizes: SizesInterface[]
+  handleSelectedSize: (size: SizesInterface) => void
 }
 
-export const SizeSelector: FC<Props> = ({ selectedSize, sizes }) => {
+export const SizeSelector: FC<Props> = ({ selectedSize, sizes, handleSelectedSize }) => {
   return (
     <Box>
       {sizes.map((size) => (
-        <Button key={size} size="small" variant={selectedSize === size ? 'contained' : 'text'}>
+        <Button key={size} size="small" variant={selectedSize === size ? 'contained' : 'text'} onClick={() => handleSelectedSize(size)}>
           {size}
         </Button>
       ))}

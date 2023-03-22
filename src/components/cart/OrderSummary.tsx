@@ -1,32 +1,36 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import { CartContext } from '@/context'
+import { formatCurrency } from '@/utils/formatCurrency'
 
 export const OrderSummary: FC = () => {
+  const { numberOfProducts, subTotal, tax, total } = useContext(CartContext)
+
   return (
     <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography>Number of items</Typography>
-        <Typography>3</Typography>
+        <Typography>{numberOfProducts}</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography>Shipping</Typography>
-        <Typography>Standard</Typography>
+        <Typography>Free</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography>Subtotal</Typography>
-        <Typography>$ 252.00</Typography>
+        <Typography>{formatCurrency(subTotal)}</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography>Sales Tax 16%</Typography>
-        <Typography>$ 48.00</Typography>
+        <Typography>Sales tax ({Number(process.env.NEXT_PUBLIC_TAX_RATE) * 100}%)</Typography>
+        <Typography>{formatCurrency(tax)}</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
         <Typography fontWeight={600} fontSize={20}>
           Total
         </Typography>
         <Typography fontWeight={600} fontSize={20}>
-          $ 300.00
+          {formatCurrency(total)}
         </Typography>
       </Box>
     </Box>

@@ -1,46 +1,61 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import Image from 'next/image'
+import { CartContext } from '@/context'
 import { ItemCounter } from '../ui'
-import { initialData } from '@/database/products'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-
-const productsInCart = [initialData.products[0], initialData.products[1], initialData.products[2]]
+import Link from 'next/link'
+import { CartInterface } from '@/interfaces'
 
 interface Props {
   editMode?: boolean
 }
 
 export const CartList: FC<Props> = ({ editMode }) => {
+  const { cart, updateProductQuantity, removeProductFromCart } = useContext(CartContext)
+
+  const handleUpdateQuantity = (product: CartInterface, newQuantity: number) => {
+    updateProductQuantity({ ...product, quantity: newQuantity })
+  }
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      {productsInCart.map((product) => (
-        <Grid container key={product.slug} spacing={0}>
+      {cart.map((product) => (
+        <Grid container key={product.slug + product.size} spacing={0}>
           <Grid item xs={3}>
-            <Image src={`/products/${product.images[0]}`} alt={product.title} width={80} height={80} />
+            <Link href={`/product/${product.slug}`}>
+              <Image src={`/products/${product.images}`} alt={product.title} width={80} height={80} />
+            </Link>
           </Grid>
           <Grid item xs={6}>
             <Typography fontWeight={600} noWrap>
               {product.title}
             </Typography>
             <Typography>
-              Talla
+              Size:{' '}
               <Typography sx={{ fontWeight: 600 }} component="span">
-                {' '}
-                M
+                {product.size}
               </Typography>
             </Typography>
             {editMode ? (
               <Box sx={{ display: 'flex', gap: 2 }}>
-                <ItemCounter />
-                <Button color="secondary" size="small">
+                <ItemCounter
+                  currentValue={product.quantity}
+                  maxValue={5}
+                  updateQuantity={(value) => {
+                    handleUpdateQuantity(product, value)
+                  }}
+                />
+                <Button color="secondary" size="small" onClick={() => removeProductFromCart(product)}>
                   Remove
                 </Button>
               </Box>
             ) : (
-              <Typography sx={{ fontWeight: 600 }}>1</Typography>
+              <Typography sx={{ fontWeight: 600 }}>
+                {product.quantity} {product.quantity > 1 ? 'products' : 'product'}
+              </Typography>
             )}
           </Grid>
           <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>

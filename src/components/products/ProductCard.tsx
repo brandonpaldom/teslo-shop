@@ -5,6 +5,7 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardActionArea from '@mui/material/CardActionArea'
 import CardMedia from '@mui/material/CardMedia'
+import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 
@@ -25,6 +26,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
       <Card onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         <Link href={`/product/${product.slug}`} prefetch={false}>
           <CardActionArea>
+            {product.inStock === 0 && <Chip label="Out of Stock" color="primary" sx={{ position: 'absolute', top: 10, left: 10 }} />}
             <CardMedia component="img" image={`/products/${productImage}`} alt={product.title} onLoad={() => setIsImageLoaded(true)} />
           </CardActionArea>
         </Link>

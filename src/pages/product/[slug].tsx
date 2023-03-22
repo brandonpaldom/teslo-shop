@@ -1,4 +1,7 @@
+import { useContext, useState } from 'react'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { CartContext } from '@/context'
 import { ShopLayout } from '@/components/layouts'
 import { ProductSlideshow, SizeSelector } from '@/components/products'
 import { ItemCounter } from '@/components/ui'
@@ -6,14 +9,51 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import { ProductInterface } from '@/interfaces'
 import { dbProducts } from '@/database'
+import { CartInterface, ProductInterface, SizesInterface } from '@/interfaces'
 
 interface Props {
   product: ProductInterface
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
+  const router = useRouter()
+  const { addProductToCart } = useContext(CartContext)
+
+  const [cartProduct, setCartProduct] = useState<CartInterface>({
+    _id: product._id,
+    images: product.images[0],
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  })
+
+  const selectedSize = (size: SizesInterface) => {
+    setCartProduct((prev) => ({
+      ...prev,
+      size,
+    }))
+  }
+
+  const handleUpdateQuantity = (quantity: number) => {
+    setCartProduct((prev) => ({
+      ...prev,
+      quantity,
+    }))
+  }
+
+  const addToCart = () => {
+    if (!cartProduct.size) {
+      return
+    }
+
+    addProductToCart(cartProduct)
+    router.push('/cart')
+  }
+
   return (
     <ShopLayout title={`${product.title} | Teslo`} description={`${product.title} | Teslo`}>
       <Grid container spacing={4}>
@@ -32,7 +72,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 Quantity
               </Typography>
-              <ItemCounter />
+              <ItemCounter currentValue={cartProduct.quantity} updateQuantity={handleUpdateQuantity} maxValue={product.inStock > 5 ? 5 : product.inStock} />
             </Box>
             <Box sx={{ mt: 2 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -40,15 +80,20 @@ const ProductPage: NextPage<Props> = ({ product }) => {
               </Typography>
               <SizeSelector
                 // selectedSize={product.sizes[1]}
+                selectedSize={cartProduct.size}
                 sizes={product.sizes}
+                handleSelectedSize={selectedSize}
               />
             </Box>
-            <Button variant="contained" color="secondary" sx={{ mt: 2, maxWidth: '320px' }}>
-              Add to cart
-            </Button>
-            {/* <Button variant="outlined" color="error" sx={{ mt: 2 }} disabled>
-              Out of stock
-            </Button> */}
+            {product.inStock === 0 ? (
+              <Button variant="outlined" color="error" sx={{ mt: 2 }} disabled>
+                Out of stock
+              </Button>
+            ) : (
+              <Button variant="contained" color="secondary" sx={{ mt: 2, maxWidth: '320px' }} onClick={addToCart}>
+                {cartProduct.size ? 'Add to cart' : 'Select a size'}
+              </Button>
+            )}
             <Box sx={{ mt: 2 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 Description
@@ -94,6 +139,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       product,
     },
-    revalidate: 60 * 60 * 24,
+    // revalidate: 60 * 60 * 24,
   }
 }

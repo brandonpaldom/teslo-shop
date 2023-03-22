@@ -81,7 +81,7 @@ export const Sidebar = () => {
               variant="standard"
               fullWidth
               sx={{ m: 2 }}
-              placeholder="Search"
+              placeholder="Search for products"
               autoComplete="off"
               InputProps={{
                 endAdornment: (
