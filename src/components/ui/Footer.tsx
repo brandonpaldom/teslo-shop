@@ -1,3 +1,4 @@
+import { Link } from '@mui/material'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 
@@ -17,13 +18,10 @@ export const Footer = () => {
         Teslo &copy; 2023
       </Typography>
       <Typography variant="body2" component="span">
-        Privacy & Legal
-      </Typography>
-      <Typography variant="body2" component="span">
-        Locations
-      </Typography>
-      <Typography variant="body2" component="span">
-        Recall
+        Created by{' '}
+        <Link href="https://github.com/brandonpaldom" underline="hover" target="_blank" rel="noopener">
+          Brandon Palmeros
+        </Link>
       </Typography>
     </Box>
   )
