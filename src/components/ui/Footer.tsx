@@ -19,7 +19,7 @@ export const Footer = () => {
       </Typography>
       <Typography variant="body2" component="span">
         Created by{' '}
-        <Link href="https://github.com/brandonpaldom" underline="hover" target="_blank" rel="noopener">
+        <Link href="https://brandonpalmeros.dev/" underline="hover" target="_blank" rel="noopener">
           Brandon Palmeros
         </Link>
       </Typography>
