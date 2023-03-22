@@ -22,7 +22,7 @@ export const OrderSummary: FC = () => {
         <Typography>{formatCurrency(subTotal)}</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography>Sales tax ({Number(process.env.NEXT_PUBLIC_TAX_RATE) * 100}%)</Typography>
+        <Typography>Sales tax ({Number(process.env.NEXT_PUBLIC_TAX_RATE || 0.16) * 100}%)</Typography>
         <Typography>{formatCurrency(tax)}</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
