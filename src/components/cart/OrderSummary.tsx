@@ -2,7 +2,7 @@ import { FC, useContext } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { CartContext } from '@/context'
-import { formatCurrency } from '@/utils/formatCurrency'
+import { formatCurrency } from '@/utils'
 
 export const OrderSummary: FC = () => {
   const { numberOfProducts, subTotal, tax, total } = useContext(CartContext)
