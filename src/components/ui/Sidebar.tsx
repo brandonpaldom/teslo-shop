@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 import { useRouter } from 'next/router'
-import { UIContext } from '@/context'
+import { AuthContext, UIContext } from '@/context'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
@@ -52,6 +52,7 @@ const adminOptions: Option[] = [
 export const Sidebar = () => {
   const router = useRouter()
   const { isSidebarOpen, toggleSidebar } = useContext(UIContext)
+  const { user, isLoggedIn, logoutUser } = useContext(AuthContext)
 
   const [search, setSearch] = useState('')
 
@@ -60,10 +61,10 @@ export const Sidebar = () => {
       return
     }
 
-    handleCategoryClick(`/search/${search}`)
+    navigateTo(`/search/${search}`)
   }
 
-  const handleCategoryClick = (url: string) => {
+  const navigateTo = (url: string) => {
     toggleSidebar()
     router.push(url)
   }
@@ -95,7 +96,7 @@ export const Sidebar = () => {
         </List>
         <List sx={{ display: { xs: 'block', sm: 'none' } }}>
           {categoryOptions.map((option) => (
-            <ListItem key={option.label} disablePadding onClick={() => handleCategoryClick(option.link)}>
+            <ListItem key={option.label} disablePadding onClick={() => navigateTo(option.link)}>
               <ListItemButton>
                 <ListItemIcon>{option.icon}</ListItemIcon>
                 <ListItemText primary={option.label} />
@@ -105,27 +106,76 @@ export const Sidebar = () => {
         </List>
         <Divider sx={{ display: { xs: 'block', sm: 'none' } }} />
         <List>
-          {profileOptions.map((option) => (
-            <ListItem key={option.label} disablePadding>
+          {isLoggedIn ? (
+            <>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <LocalMallOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Products" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <ShoppingCartOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Orders" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding onClick={logoutUser}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <LogoutOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </ListItemButton>
+              </ListItem>
+            </>
+          ) : (
+            <ListItem disablePadding onClick={() => navigateTo(`/auth/login?p=${router.asPath}`)}>
               <ListItemButton>
-                <ListItemIcon>{option.icon}</ListItemIcon>
-                <ListItemText primary={option.label} />
+                <ListItemIcon>
+                  <LoginOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Login" />
               </ListItemButton>
             </ListItem>
-          ))}
+          )}
         </List>
-        <Divider />
-        <ListSubheader>Admin dashboard</ListSubheader>
-        <List>
-          {adminOptions.map((option) => (
-            <ListItem key={option.label} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{option.icon}</ListItemIcon>
-                <ListItemText primary={option.label} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+        {user?.role === 'admin' && (
+          <>
+            <Divider />
+            <ListSubheader>Admin dashboard</ListSubheader>
+            <List>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <AccountCircleOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Profile" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <ShoppingCartOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="My Orders" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <GroupOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Users" />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </>
+        )}
       </Box>
     </Drawer>
   )

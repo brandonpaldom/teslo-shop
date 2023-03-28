@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import Link from 'next/link'
 import { ShopLayout } from '@/components/layouts'
 import { CartList, OrderSummary } from '@/components/cart'
@@ -8,8 +9,11 @@ import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import { CartContext } from '@/context'
 
 export default function SummaryPage() {
+  const { shipingAddress, numberOfProducts } = useContext(CartContext)
+
   return (
     <ShopLayout title="Teslo | Checkout" description="Teslo | Your Cart">
       <Box sx={{ maxWidth: { xs: '480px', lg: '1024px' }, margin: '0 auto' }}>
@@ -24,17 +28,22 @@ export default function SummaryPage() {
             <Card sx={{ border: '1px solid #f5f5f5' }}>
               <CardContent sx={{ p: 4 }}>
                 <Typography variant="h2" component="h2">
-                  Order Summary (3 items)
+                  Order Summary ({numberOfProducts} item{numberOfProducts > 1 && 's'})
                 </Typography>
                 <Box sx={{ my: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Typography fontWeight={600}>Shipping address</Typography>
-                      <Typography>Brandon Palmeros</Typography>
-                      <Typography>3533 E Foothill Blvd</Typography>
-                      <Typography>Pasadena, CA 91107</Typography>
+                      <Typography>
+                        {shipingAddress?.firstName} {shipingAddress?.lastName}
+                      </Typography>
+                      <Typography>{shipingAddress?.address}</Typography>
+                      {shipingAddress?.addressLine2 && <Typography>{shipingAddress?.addressLine2}</Typography>}
+                      <Typography>
+                        {shipingAddress?.city}, {shipingAddress?.state} {shipingAddress?.zipCode}
+                      </Typography>
                       <Typography>United States</Typography>
-                      <Typography>+12015550123</Typography>
+                      <Typography>+1{shipingAddress?.phone}</Typography>
                     </Box>
                     <Link href="/checkout/address" style={{ textDecoration: 'underline' }}>
                       <Typography>Edit</Typography>

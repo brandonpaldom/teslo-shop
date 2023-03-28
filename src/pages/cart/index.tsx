@@ -1,13 +1,31 @@
+import { useContext, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next'
 import { CartList, OrderSummary } from '@/components/cart'
 import { ShopLayout } from '@/components/layouts'
+import { CartContext } from '@/context'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import { jwt } from '@/utils'
 
 export default function CartPage() {
+  const { isLoaded, cart } = useContext(CartContext)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (isLoaded && cart.length === 0) {
+      router.replace('/cart/empty')
+    }
+  }, [isLoaded, cart, router])
+
+  if (!isLoaded || cart.length === 0) {
+    return null
+  }
+
   return (
     <ShopLayout title="Teslo | Your Cart" description="Teslo | Your Cart">
       <Box sx={{ maxWidth: { xs: '480px', lg: '1024px' }, margin: '0 auto' }}>
@@ -26,7 +44,7 @@ export default function CartPage() {
                 </Typography>
                 <OrderSummary />
                 <Box sx={{ mt: 4 }}>
-                  <Button variant="contained" color="secondary" fullWidth>
+                  <Button variant="contained" color="secondary" fullWidth href="/checkout/address">
                     Checkout
                   </Button>
                 </Box>

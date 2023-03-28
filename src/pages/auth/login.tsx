@@ -44,7 +44,8 @@ export default function LoginPage() {
       return
     }
 
-    router.replace('/')
+    const destination = router.query.p?.toString() || '/'
+    router.replace(destination)
   }
 
   return (
@@ -88,7 +89,7 @@ export default function LoginPage() {
             </Link>
             <Divider />
             <Typography sx={{ textAlign: 'center' }}>Don&apos;t have an account?</Typography>
-            <Link href="/auth/register">
+            <Link href={router.query.p ? `/auth/register?p=${router.query.p}` : '/auth/register'}>
               <Button variant="contained" color="inherit" fullWidth>
                 Create account
               </Button>

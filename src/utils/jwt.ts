@@ -15,6 +15,10 @@ export const verifyToken = (token: string): Promise<string> => {
     throw new Error('The environment variable JWT_SECRET is not set')
   }
 
+  if (token.length < 10) {
+    return Promise.reject('Invalid token')
+  }
+
   return new Promise((resolve, reject) => {
     try {
       jwt.verify(token, JWT_SECRET, (err, decoded) => {
