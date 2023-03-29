@@ -1,17 +1,18 @@
-import { useContext, useState } from 'react'
-import Link from 'next/link'
 import { AuthLayout } from '@/components/layouts'
+import { AuthContext } from '@/context'
+import { validations } from '@/utils'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { validations } from '@/utils'
-import { tesloApi } from '@/api'
+import { GetServerSideProps } from 'next'
+import { getSession, signIn } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { AuthContext } from '@/context'
+import { useContext, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
 type Inputs = {
   name: string
@@ -47,8 +48,7 @@ export default function RegisterPage() {
       return
     }
 
-    const destination = router.query.p?.toString() || '/'
-    router.replace(destination)
+    await signIn('credentials', { email, password })
   }
 
   return (
@@ -109,4 +109,22 @@ export default function RegisterPage() {
       </form>
     </AuthLayout>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+  const session = await getSession({ req })
+  const { p = '/' } = query
+
+  if (session) {
+    return {
+      redirect: {
+        destination: p as string,
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {},
+  }
 }

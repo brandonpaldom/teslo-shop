@@ -1,7 +1,6 @@
-import { useContext } from 'react'
-import Link from 'next/link'
-import { ShopLayout } from '@/components/layouts'
 import { CartList, OrderSummary } from '@/components/cart'
+import { ShopLayout } from '@/components/layouts'
+import { CartContext } from '@/context'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
@@ -9,10 +8,22 @@ import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import { CartContext } from '@/context'
+import Cookies from 'js-cookie'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useContext, useEffect } from 'react'
 
 export default function SummaryPage() {
+  const router = useRouter()
   const { shipingAddress, numberOfProducts } = useContext(CartContext)
+
+  useEffect(() => {
+    if (!Cookies.get('firstName')) {
+      router.push('/checkout/address')
+    }
+  }, [router])
+
+  if (!shipingAddress) return null
 
   return (
     <ShopLayout title="Teslo | Checkout" description="Teslo | Your Cart">

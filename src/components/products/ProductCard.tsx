@@ -1,5 +1,3 @@
-import { FC, useMemo, useState } from 'react'
-import Link from 'next/link'
 import { ProductInterface } from '@/interfaces'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -8,6 +6,8 @@ import CardMedia from '@mui/material/CardMedia'
 import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import Link from 'next/link'
+import { FC, useMemo, useState } from 'react'
 
 interface Props {
   product: ProductInterface

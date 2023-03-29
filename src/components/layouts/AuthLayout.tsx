@@ -1,5 +1,6 @@
-import { FC } from 'react'
 import Head from 'next/head'
+import { FC } from 'react'
+
 import { AuthNavbar, Footer } from '../ui'
 
 interface Props {

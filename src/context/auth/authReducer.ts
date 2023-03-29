@@ -1,4 +1,5 @@
 import { UserInterface } from '@/interfaces'
+
 import { AuthState } from './'
 
 type AuthAction = { type: 'LOGIN'; payload: UserInterface } | { type: 'LOGOUT' }

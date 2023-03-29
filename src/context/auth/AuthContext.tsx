@@ -1,5 +1,5 @@
-import { createContext } from 'react'
 import { UserInterface } from '@/interfaces'
+import { createContext } from 'react'
 
 interface AuthContextProps {
   isLoggedIn: boolean

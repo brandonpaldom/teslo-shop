@@ -1,7 +1,7 @@
-import Image from 'next/image'
-import Link from 'next/link'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export const AuthNavbar = () => {
   return (

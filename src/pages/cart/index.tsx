@@ -1,6 +1,3 @@
-import { useContext, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { GetServerSideProps } from 'next'
 import { CartList, OrderSummary } from '@/components/cart'
 import { ShopLayout } from '@/components/layouts'
 import { CartContext } from '@/context'
@@ -10,21 +7,25 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import { jwt } from '@/utils'
+import { useRouter } from 'next/router'
+import { useContext, useEffect } from 'react'
 
 export default function CartPage() {
-  const { isLoaded, cart } = useContext(CartContext)
   const router = useRouter()
+  const { cart } = useContext(CartContext)
+
+  // if (cart.length === 0) {
+  //   router.replace('/cart/empty')
+  //   return null
+  // }
 
   useEffect(() => {
-    if (isLoaded && cart.length === 0) {
+    if (cart.length === 0) {
       router.replace('/cart/empty')
     }
-  }, [isLoaded, cart, router])
 
-  if (!isLoaded || cart.length === 0) {
-    return null
-  }
+    return () => {}
+  }, [cart, router])
 
   return (
     <ShopLayout title="Teslo | Your Cart" description="Teslo | Your Cart">

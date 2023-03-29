@@ -1,5 +1,5 @@
-import mongoose, { Model, Schema } from 'mongoose'
 import { ProductInterface } from '@/interfaces'
+import mongoose, { Model, Schema } from 'mongoose'
 
 const productSchema = new Schema(
   {

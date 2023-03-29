@@ -1,6 +1,7 @@
-import { FC } from 'react'
 import Head from 'next/head'
-import { Navbar, Sidebar, Footer } from '../ui'
+import { FC } from 'react'
+
+import { Footer, Navbar, Sidebar } from '../ui'
 
 interface Props {
   children: React.ReactNode

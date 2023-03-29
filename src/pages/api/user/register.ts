@@ -1,8 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/database'
 import { User } from '@/models'
-import bcrypt from 'bcryptjs'
 import { jwt, validations } from '@/utils'
+import bcrypt from 'bcryptjs'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data =
   | { message: string }

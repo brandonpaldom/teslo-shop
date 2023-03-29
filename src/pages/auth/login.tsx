@@ -1,17 +1,18 @@
-import { useContext, useState } from 'react'
-import Link from 'next/link'
-import { AuthContext } from '@/context'
 import { AuthLayout } from '@/components/layouts'
+import { validations } from '@/utils'
+import GitHubIcon from '@mui/icons-material/GitHub'
+import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import Alert from '@mui/material/Alert'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { validations } from '@/utils'
-import { tesloApi } from '@/api'
+import { GetServerSideProps } from 'next'
+import { getProviders, getSession, signIn } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
 type Inputs = {
   email: string
@@ -20,7 +21,6 @@ type Inputs = {
 
 export default function LoginPage() {
   const router = useRouter()
-  const { loginUser } = useContext(AuthContext)
 
   const {
     register,
@@ -29,23 +29,17 @@ export default function LoginPage() {
   } = useForm<Inputs>()
 
   const [error, setError] = useState(false)
+  // const [providers, setProviders] = useState<any>({})
+
+  // useEffect(() => {
+  //   getProviders().then((data) => {
+  //     setProviders(data)
+  //   })
+  // }, [])
 
   const onLogin: SubmitHandler<Inputs> = async ({ email, password }) => {
     setError(false)
-    const isVerified = await loginUser(email, password)
-
-    if (!isVerified) {
-      setError(true)
-
-      setTimeout(() => {
-        setError(false)
-      }, 3000)
-
-      return
-    }
-
-    const destination = router.query.p?.toString() || '/'
-    router.replace(destination)
+    await signIn('credentials', { email, password })
   }
 
   return (
@@ -87,6 +81,22 @@ export default function LoginPage() {
             <Link href="/auth/register">
               <Typography sx={{ textAlign: 'center', textDecoration: 'underline' }}>Forgot password?</Typography>
             </Link>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {/* {Object.values(providers).map((provider: any) => {
+                if (provider.name === 'Credentials') {
+                  return null
+                }
+
+                return (
+                  <Button key={provider.name} variant="outlined" color="inherit" fullWidth onClick={() => signIn(provider.id)}>
+                    Sign in with {provider.name}
+                  </Button>
+                )
+              })} */}
+              <Button variant="outlined" color="inherit" fullWidth onClick={() => signIn('github')} startIcon={<GitHubIcon />}>
+                Sign in with GitHub
+              </Button>
+            </Box>
             <Divider />
             <Typography sx={{ textAlign: 'center' }}>Don&apos;t have an account?</Typography>
             <Link href={router.query.p ? `/auth/register?p=${router.query.p}` : '/auth/register'}>
@@ -99,4 +109,22 @@ export default function LoginPage() {
       </form>
     </AuthLayout>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+  const session = await getSession({ req })
+  const { p = '/' } = query
+
+  if (session) {
+    return {
+      redirect: {
+        destination: p as string,
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {},
+  }
 }

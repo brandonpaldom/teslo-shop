@@ -1,7 +1,7 @@
-import { FC } from 'react'
+import { SizesInterface } from '@/interfaces'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { SizesInterface } from '@/interfaces'
+import { FC } from 'react'
 
 interface Props {
   selectedSize?: SizesInterface

@@ -1,5 +1,5 @@
-import Box from '@mui/system/Box'
 import Typography from '@mui/material/Typography'
+import Box from '@mui/system/Box'
 
 export const Banner = () => {
   return (

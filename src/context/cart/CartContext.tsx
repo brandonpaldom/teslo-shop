@@ -1,5 +1,6 @@
-import { createContext } from 'react'
 import { CartInterface } from '@/interfaces'
+import { createContext } from 'react'
+
 import { ShippingAddress } from './'
 
 interface CartContextProps {

@@ -1,13 +1,14 @@
-import { FC, useContext } from 'react'
-import Image from 'next/image'
 import { CartContext } from '@/context'
-import { ItemCounter } from '../ui'
+import { CartInterface } from '@/interfaces'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import Image from 'next/image'
 import Link from 'next/link'
-import { CartInterface } from '@/interfaces'
+import { FC, useContext } from 'react'
+
+import { ItemCounter } from '../ui'
 
 interface Props {
   editMode?: boolean

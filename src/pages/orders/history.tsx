@@ -1,9 +1,9 @@
-import Link from 'next/link'
 import { ShopLayout } from '@/components/layouts'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
-import { DataGrid, GridColDef, GridRowsProp, GridRenderCellParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams, GridRowsProp } from '@mui/x-data-grid'
+import Link from 'next/link'
 
 const rows: GridRowsProp = [
   { id: 1, paid: true, fullName: 'Alejandro Escobar' },

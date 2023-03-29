@@ -1,7 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/database'
-import { Product } from '@/models'
 import { ProductInterface } from '@/interfaces'
+import { Product } from '@/models'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = { message: string } | ProductInterface
 

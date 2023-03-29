@@ -1,8 +1,8 @@
 import { ShopLayout } from '@/components/layouts'
-import { ProductsLoader } from '@/components/ui'
 import { ProductList } from '@/components/products'
-import Typography from '@mui/material/Typography'
+import { ProductsLoader } from '@/components/ui'
 import { useProducts } from '@/hooks'
+import Typography from '@mui/material/Typography'
 
 export default function MenPage() {
   const { products, isLoading } = useProducts(`/products?gender=men`)

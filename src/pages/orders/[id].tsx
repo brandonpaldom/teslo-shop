@@ -1,6 +1,5 @@
-import Link from 'next/link'
-import { ShopLayout } from '@/components/layouts'
 import { CartList, OrderSummary } from '@/components/cart'
+import { ShopLayout } from '@/components/layouts'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -8,6 +7,7 @@ import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import Link from 'next/link'
 
 export default function OrderPage() {
   return (

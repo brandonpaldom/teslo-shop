@@ -1,8 +1,8 @@
-import { FC, useContext } from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import { CartContext } from '@/context'
 import { formatCurrency } from '@/utils'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { FC, useContext } from 'react'
 
 export const OrderSummary: FC = () => {
   const { numberOfProducts, subTotal, tax, total } = useContext(CartContext)

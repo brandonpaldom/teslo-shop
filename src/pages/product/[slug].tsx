@@ -1,16 +1,16 @@
-import { useContext, useState } from 'react'
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
-import { useRouter } from 'next/router'
-import { CartContext } from '@/context'
 import { ShopLayout } from '@/components/layouts'
 import { ProductSlideshow, SizeSelector } from '@/components/products'
 import { ItemCounter } from '@/components/ui'
+import { CartContext } from '@/context'
+import { dbProducts } from '@/database'
+import { CartInterface, ProductInterface, SizesInterface } from '@/interfaces'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import { dbProducts } from '@/database'
-import { CartInterface, ProductInterface, SizesInterface } from '@/interfaces'
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { useContext, useState } from 'react'
 
 interface Props {
   product: ProductInterface

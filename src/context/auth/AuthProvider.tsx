@@ -1,10 +1,12 @@
-import { FC, useEffect, useReducer } from 'react'
-import { useRouter } from 'next/router'
-import { AuthContext, authReducer } from './'
-import { UserInterface } from '@/interfaces'
 import { tesloApi } from '@/api'
-import Cookies from 'js-cookie'
+import { UserInterface } from '@/interfaces'
 import axios from 'axios'
+import Cookies from 'js-cookie'
+import { signOut, useSession } from 'next-auth/react'
+// import { useRouter } from 'next/router'
+import { FC, useEffect, useReducer } from 'react'
+
+import { AuthContext, authReducer } from './'
 
 interface Props {
   children: React.ReactNode
@@ -22,26 +24,29 @@ const AUTH_INITIAL_STATE: AuthState = {
 
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE)
-  const router = useRouter()
+  const { data: session, status } = useSession()
+  // const router = useRouter()
 
   useEffect(() => {
-    checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
-    if (!Cookies.get('token')) {
-      return
+    if (status === 'authenticated') {
+      dispatch({ type: 'LOGIN', payload: session.user as UserInterface })
     }
+  }, [status, session])
 
-    try {
-      const { data } = await tesloApi.get('/user/validate-token')
-      const { token, user } = data
-      Cookies.set('token', token)
-      dispatch({ type: 'LOGIN', payload: user })
-    } catch (error) {
-      Cookies.remove('token')
-    }
-  }
+  // const checkAuth = async () => {
+  //   if (!Cookies.get('token')) {
+  //     return
+  //   }
+
+  //   try {
+  //     const { data } = await tesloApi.get('/user/validate-token')
+  //     const { token, user } = data
+  //     Cookies.set('token', token)
+  //     dispatch({ type: 'LOGIN', payload: user })
+  //   } catch (error) {
+  //     Cookies.remove('token')
+  //   }
+  // }
 
   const loginUser = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -81,9 +86,16 @@ export const AuthProvider: FC<Props> = ({ children }) => {
   }
 
   const logoutUser = () => {
-    Cookies.remove('token')
     Cookies.remove('cart')
-    router.reload()
+    Cookies.remove('firstName')
+    Cookies.remove('lastName')
+    Cookies.remove('address')
+    Cookies.remove('addressLine2')
+    Cookies.remove('zipCode')
+    Cookies.remove('city')
+    Cookies.remove('state')
+    Cookies.remove('phone')
+    signOut()
   }
 
   return <AuthContext.Provider value={{ ...state, loginUser, registerUser, logoutUser }}>{children}</AuthContext.Provider>

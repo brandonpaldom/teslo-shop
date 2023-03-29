@@ -1,6 +1,6 @@
-import { FC } from 'react'
 import Grid from '@mui/material/Grid'
 import Skeleton from '@mui/material/Skeleton'
+import { FC } from 'react'
 
 export const ProductsLoader: FC = () => {
   return (

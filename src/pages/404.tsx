@@ -1,7 +1,7 @@
-import Link from 'next/link'
 import { ShopLayout } from '@/components/layouts'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import Link from 'next/link'
 
 export default function Custom404() {
   return (

@@ -1,10 +1,10 @@
-import { GetServerSideProps, NextPage } from 'next'
 import { ShopLayout } from '@/components/layouts'
 import { ProductList } from '@/components/products'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import { dbProducts } from '@/database'
 import { ProductInterface } from '@/interfaces'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { GetServerSideProps, NextPage } from 'next'
 
 interface Props {
   products: ProductInterface[]

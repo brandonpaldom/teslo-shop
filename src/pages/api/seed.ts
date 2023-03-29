@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { db, seedData } from '@/database'
 import { Product, User } from '@/models'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 type Data = {
   message: string
