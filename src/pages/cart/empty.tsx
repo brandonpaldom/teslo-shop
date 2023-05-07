@@ -1,9 +1,13 @@
 import { ShopLayout } from '@/components/layouts'
+import { AuthContext } from '@/context'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+import { useContext } from 'react'
 
 export default function EmptyCartPage() {
+  const { isLoggedIn } = useContext(AuthContext)
+
   return (
     <ShopLayout title="Teslo | Your Cart" description="Teslo | Your Cart">
       <Box sx={{ maxWidth: '1024px', margin: '0 auto' }}>
@@ -18,9 +22,11 @@ export default function EmptyCartPage() {
             <Button variant="contained" color="secondary" fullWidth>
               Continue Shopping
             </Button>
-            <Button variant="outlined" fullWidth>
-              Sign In
-            </Button>
+            {!isLoggedIn && (
+              <Button variant="outlined" fullWidth>
+                Sign In
+              </Button>
+            )}
           </Box>
         </Box>
       </Box>

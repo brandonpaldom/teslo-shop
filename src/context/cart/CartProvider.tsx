@@ -1,4 +1,6 @@
-import { CartInterface } from '@/interfaces'
+import { tesloApi } from '@/api'
+import { CartInterface, OrderInterface, ShippingAddress } from '@/interfaces'
+import axios from 'axios'
 import Cookies from 'js-cookie'
 import { FC, useEffect, useReducer } from 'react'
 
@@ -16,17 +18,6 @@ export interface CartState {
   tax: number
   total: number
   shipingAddress?: ShippingAddress
-}
-
-export interface ShippingAddress {
-  firstName: string
-  lastName: string
-  address: string
-  addressLine2?: string
-  zipCode: string
-  city: string
-  state: string
-  phone: string
 }
 
 const CART_INITIAL_STATE: CartState = {
@@ -156,8 +147,62 @@ export const CartProvider: FC<Props> = ({ children }) => {
     })
   }
 
+  const createOrder = async (): Promise<{ hasError: boolean; message: string }> => {
+    if (!state.shipingAddress) {
+      throw new Error('Shipping address is required')
+    }
+
+    const body: OrderInterface = {
+      orderItems: state.cart.map((product) => ({
+        ...product,
+        size: product.size!,
+        image: product.image!,
+      })),
+      shippingAddress: state.shipingAddress,
+      numberOfProducts: state.numberOfProducts,
+      subTotal: state.subTotal,
+      tax: state.tax,
+      total: state.total,
+      isPaid: false,
+    }
+
+    try {
+      const { data } = await tesloApi.post<OrderInterface>('/orders', body)
+
+      dispatch({
+        type: 'ORDER_SUCCESS',
+      })
+
+      return {
+        hasError: false,
+        message: data._id!,
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          hasError: true,
+          message: error.response?.data.message,
+        }
+      }
+
+      return {
+        hasError: true,
+        message: 'Something went wrong',
+      }
+    }
+  }
+
   return (
-    <CartContext.Provider value={{ ...state, addProductToCart, updateProductQuantity, removeProductFromCart, updateShippingAddress }}>
+    <CartContext.Provider
+      value={{
+        ...state,
+        addProductToCart,
+        updateProductQuantity,
+        removeProductFromCart,
+        updateShippingAddress,
+        createOrder,
+      }}
+    >
       {children}
     </CartContext.Provider>
   )

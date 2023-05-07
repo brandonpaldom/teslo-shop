@@ -2,7 +2,7 @@ import { SizesInterface } from './'
 
 export interface CartInterface {
   _id: string
-  images: string
+  image: string
   price: number
   size?: SizesInterface
   slug: string

@@ -1,6 +1,6 @@
-import { CartInterface } from '@/interfaces'
+import { CartInterface, ShippingAddress } from '@/interfaces'
 
-import { CartState, ShippingAddress } from './'
+import { CartState } from './'
 
 type CartAction =
   | { type: 'LOAD_CART_FROM_COOKIES'; payload: CartInterface[] }
@@ -18,6 +18,7 @@ type CartAction =
     }
   | { type: 'LOAD_ADDRESS_FROM_COOKIES'; payload: ShippingAddress }
   | { type: 'UPDATE_SHIPPING_ADDRESS'; payload: ShippingAddress }
+  | { type: 'ORDER_SUCCESS' }
 
 export const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
@@ -59,6 +60,15 @@ export const cartReducer = (state: CartState, action: CartAction): CartState => 
       return {
         ...state,
         shipingAddress: action.payload,
+      }
+    case 'ORDER_SUCCESS':
+      return {
+        ...state,
+        cart: [],
+        numberOfProducts: 0,
+        subTotal: 0,
+        tax: 0,
+        total: 0,
       }
     default:
       return state

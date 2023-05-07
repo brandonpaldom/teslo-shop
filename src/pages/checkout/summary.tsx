@@ -5,23 +5,39 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
+import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 export default function SummaryPage() {
   const router = useRouter()
-  const { shipingAddress, numberOfProducts } = useContext(CartContext)
+  const { shipingAddress, numberOfProducts, createOrder } = useContext(CartContext)
+  const [isPosting, setIsPosting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     if (!Cookies.get('firstName')) {
       router.push('/checkout/address')
     }
   }, [router])
+
+  const onCreateOrder = async () => {
+    setIsPosting(true)
+    const { hasError, message } = await createOrder()
+
+    if (hasError) {
+      setIsPosting(false)
+      setErrorMessage(message)
+      return
+    }
+
+    router.replace(`/orders/${message}`)
+  }
 
   if (!shipingAddress) return null
 
@@ -69,9 +85,10 @@ export default function SummaryPage() {
                 </Link>
                 <OrderSummary />
                 <Box sx={{ mt: 4 }}>
-                  <Button variant="contained" color="secondary" fullWidth>
+                  <Button variant="contained" color="secondary" fullWidth onClick={onCreateOrder} disabled={isPosting}>
                     Place order
                   </Button>
+                  {errorMessage && <Chip color="error" label={errorMessage} sx={{ mt: 2 }} />}
                 </Box>
               </CardContent>
             </Card>

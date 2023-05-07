@@ -1,5 +1,5 @@
 import { CartContext } from '@/context'
-import { CartInterface } from '@/interfaces'
+import { CartInterface, OrderInterface, OrderItemInterface } from '@/interfaces'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -12,22 +12,25 @@ import { ItemCounter } from '../ui'
 
 interface Props {
   editMode?: boolean
+  products?: OrderItemInterface[]
 }
 
-export const CartList: FC<Props> = ({ editMode }) => {
+export const CartList: FC<Props> = ({ editMode = false, products }) => {
   const { cart, updateProductQuantity, removeProductFromCart } = useContext(CartContext)
 
   const handleUpdateQuantity = (product: CartInterface, newQuantity: number) => {
     updateProductQuantity({ ...product, quantity: newQuantity })
   }
 
+  const productsInCart = products ? products : cart
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      {cart.map((product) => (
+      {productsInCart.map((product) => (
         <Grid container key={product.slug + product.size} spacing={0}>
           <Grid item xs={3}>
             <Link href={`/product/${product.slug}`}>
-              <Image src={`/products/${product.images}`} alt={product.title} width={80} height={80} />
+              <Image src={`/products/${product.image}`} alt={product.title} width={80} height={80} />
             </Link>
           </Grid>
           <Grid item xs={6}>
@@ -46,10 +49,10 @@ export const CartList: FC<Props> = ({ editMode }) => {
                   currentValue={product.quantity}
                   maxValue={5}
                   updateQuantity={(value) => {
-                    handleUpdateQuantity(product, value)
+                    handleUpdateQuantity(product as CartInterface, value)
                   }}
                 />
-                <Button color="secondary" size="small" onClick={() => removeProductFromCart(product)}>
+                <Button color="secondary" size="small" onClick={() => removeProductFromCart(product as CartInterface)}>
                   Remove
                 </Button>
               </Box>

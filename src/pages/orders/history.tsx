@@ -1,22 +1,13 @@
 import { ShopLayout } from '@/components/layouts'
+import { dbOrders } from '@/database'
+import { OrderInterface } from '@/interfaces'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef, GridRenderCellParams, GridRowsProp } from '@mui/x-data-grid'
+import { GetServerSideProps, NextPage } from 'next'
+import { getSession } from 'next-auth/react'
 import Link from 'next/link'
-
-const rows: GridRowsProp = [
-  { id: 1, paid: true, fullName: 'Alejandro Escobar' },
-  { id: 2, paid: false, fullName: 'Antonia Sánchez' },
-  { id: 3, paid: true, fullName: 'Carlos López' },
-  { id: 4, paid: false, fullName: 'Diego Pérez' },
-  { id: 5, paid: true, fullName: 'Enrique Gómez' },
-  { id: 6, paid: true, fullName: 'Felipa García' },
-  { id: 7, paid: true, fullName: 'Javier Torres' },
-  { id: 8, paid: true, fullName: 'Laia Rodríguez' },
-  { id: 9, paid: true, fullName: 'Mario Hernández' },
-  { id: 10, paid: true, fullName: 'Triana Martínez' },
-]
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 150 },
@@ -37,7 +28,7 @@ const columns: GridColDef[] = [
     sortable: false,
     renderCell: (params: GridRenderCellParams) => {
       const link = (
-        <Link href={`/orders/${params.row.id}`} style={{ textDecoration: 'underline' }}>
+        <Link href={`/orders/${params.row.orderId}`} style={{ textDecoration: 'underline' }}>
           Go to order
         </Link>
       )
@@ -46,7 +37,18 @@ const columns: GridColDef[] = [
   },
 ]
 
-export default function HistoryPage() {
+interface Props {
+  orders: OrderInterface[]
+}
+
+const HistoryPage: NextPage<Props> = ({ orders }) => {
+  const rows = orders.map((order, index) => ({
+    id: index + 1,
+    paid: order.isPaid,
+    fullName: `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
+    orderId: order._id,
+  }))
+
   return (
     <ShopLayout title="Teslo | Order History" description="Teslo | Order History">
       <Box>
@@ -65,4 +67,27 @@ export default function HistoryPage() {
       </Box>
     </ShopLayout>
   )
+}
+
+export default HistoryPage
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const session: any = await getSession({ req })
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/auth/login?p=/orders/history`,
+        permanent: false,
+      },
+    }
+  }
+
+  const orders = await dbOrders.getOrdersByUserId(session.user._id)
+
+  return {
+    props: {
+      orders,
+    },
+  }
 }

@@ -107,7 +107,7 @@ export const Sidebar = () => {
         <List>
           {isLoggedIn ? (
             <>
-              <ListItem disablePadding>
+              <ListItem disablePadding onClick={() => navigateTo('/')}>
                 <ListItemButton>
                   <ListItemIcon>
                     <LocalMallOutlinedIcon />
@@ -115,7 +115,7 @@ export const Sidebar = () => {
                   <ListItemText primary="Products" />
                 </ListItemButton>
               </ListItem>
-              <ListItem disablePadding>
+              <ListItem disablePadding onClick={() => navigateTo('/orders/history')}>
                 <ListItemButton>
                   <ListItemIcon>
                     <ShoppingCartOutlinedIcon />
