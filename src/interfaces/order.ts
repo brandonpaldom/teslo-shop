@@ -13,6 +13,7 @@ export interface OrderInterface {
   total: number
   isPaid: boolean
   paidAt?: string
+  transactionId?: string
 }
 
 export interface OrderItemInterface {

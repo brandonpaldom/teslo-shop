@@ -1,3 +1,4 @@
+import { tesloApi } from '@/api'
 import { CartList, OrderSummary } from '@/components/cart'
 import { ShopLayout } from '@/components/layouts'
 import { dbOrders } from '@/database'
@@ -6,19 +7,50 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Chip from '@mui/material/Chip'
+import CircularProgress from '@mui/material/CircularProgress'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import { PayPalButtons } from '@paypal/react-paypal-js'
 import { GetServerSideProps, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+
+export type OrderResponseBody = {
+  id: string
+  status: 'COMPLETED' | 'SAVED' | 'APPROVED' | 'VOIDED' | 'PAYER_ACTION_REQUIRED' | 'CREATED'
+}
 
 interface Props {
   order: OrderInterface
 }
 
 const OrderPage: NextPage<Props> = ({ order }) => {
+  const router = useRouter()
   const { _id, orderItems, isPaid, shippingAddress } = order
+  const [isPaying, setIsPaying] = useState(false)
+
+  const onOrderSuccess = async (details: OrderResponseBody) => {
+    if (details.status !== 'COMPLETED') {
+      return alert('Something went wrong')
+    }
+
+    setIsPaying(true)
+
+    try {
+      const { data } = await tesloApi.post(`/orders/pay`, {
+        transactionId: details.id,
+        orderId: order._id,
+      })
+
+      router.reload()
+    } catch (error) {
+      setIsPaying(false)
+      console.log(error)
+      alert('Something went wrong')
+    }
+  }
 
   return (
     <ShopLayout title="Teslo | Checkout" description="Teslo | Your Cart">
@@ -59,11 +91,37 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                 </Box>
                 <Divider />
                 <OrderSummary orderValues={{ numberOfProducts: order.numberOfProducts, subTotal: order.subTotal, tax: order.tax, total: order.total }} />
-                <Box sx={{ mt: 4 }}>
+                <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column', gap: 4 }}>
                   <Typography variant="h1" component="h1">
                     Pay
                   </Typography>
-                  {!order.isPaid ? <Chip label="Successfully paid" variant="outlined" color="success" sx={{ mt: 2, width: '100%' }} /> : <p>Pay</p>}
+                  <Box sx={{ display: isPaying ? 'flex' : 'none', justifyContent: 'center' }}>
+                    <CircularProgress />
+                  </Box>
+                  <Box sx={{ display: isPaying ? 'none' : 'flex', flexDirection: 'column' }}>
+                    {order.isPaid ? (
+                      <Chip label="Successfully paid" variant="outlined" color="success" sx={{ width: '100%' }} />
+                    ) : (
+                      <PayPalButtons
+                        createOrder={(data, actions) => {
+                          return actions.order.create({
+                            purchase_units: [
+                              {
+                                amount: {
+                                  value: `${order.total}`,
+                                },
+                              },
+                            ],
+                          })
+                        }}
+                        onApprove={(data, actions) => {
+                          return actions.order!.capture().then((details) => {
+                            onOrderSuccess(details)
+                          })
+                        }}
+                      />
+                    )}
+                  </Box>
                 </Box>
               </CardContent>
             </Card>
