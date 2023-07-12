@@ -17,7 +17,7 @@ const columns: GridColDef[] = [
     headerName: 'Status',
     width: 150,
     renderCell: (params: GridRenderCellParams) => {
-      const chip = params.row.paid ? <Chip label="Paid" variant="outlined" color="success" /> : <Chip label="Not paid" variant="outlined" color="warning" />
+      const chip = params.row.status ? <Chip label="Paid" variant="outlined" color="success" /> : <Chip label="Not paid" variant="outlined" color="warning" />
       return chip
     },
   },
