@@ -4,17 +4,17 @@ import { OrderInterface } from '@/interfaces'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
-import { DataGrid, GridColDef, GridRenderCellParams, GridRowsProp } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { GetServerSideProps, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import Link from 'next/link'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 150 },
-  { field: 'fullName', headerName: 'Full Name', width: 150 },
+  { field: 'name', headerName: 'Name', width: 150 },
   {
-    field: 'paid',
-    headerName: 'Paid',
+    field: 'status',
+    headerName: 'Status',
     width: 150,
     renderCell: (params: GridRenderCellParams) => {
       const chip = params.row.paid ? <Chip label="Paid" variant="outlined" color="success" /> : <Chip label="Not paid" variant="outlined" color="warning" />
@@ -44,8 +44,8 @@ interface Props {
 const HistoryPage: NextPage<Props> = ({ orders }) => {
   const rows = orders.map((order, index) => ({
     id: index + 1,
-    paid: order.isPaid,
-    fullName: `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
+    status: order.isPaid,
+    name: `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
     orderId: order._id,
   }))
 

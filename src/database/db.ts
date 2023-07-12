@@ -5,9 +5,12 @@ export const connect = async () => {
     return
   }
 
-  await mongoose.connect(process.env.MONGODB_URI as string)
-
-  console.log('Connected to MongoDB')
+  try {
+    await mongoose.connect(process.env.MONGODB_URI as string)
+    console.log('Connected to MongoDB')
+  } catch (error) {
+    console.error('Failed to connect to MongoDB:', error)
+  }
 }
 
 export const disconnect = async () => {
@@ -15,7 +18,10 @@ export const disconnect = async () => {
     return
   }
 
-  await mongoose.disconnect()
-
-  console.log('Disconnected from MongoDB')
+  try {
+    await mongoose.disconnect()
+    console.log('Disconnected from MongoDB')
+  } catch (error) {
+    console.error('Failed to disconnect from MongoDB:', error)
+  }
 }

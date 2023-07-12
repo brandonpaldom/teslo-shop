@@ -14,6 +14,7 @@ export interface OrderInterface {
   isPaid: boolean
   paidAt?: string
   transactionId?: string
+  createdAt?: string
 }
 
 export interface OrderItemInterface {

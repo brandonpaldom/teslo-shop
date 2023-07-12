@@ -1,6 +1,7 @@
 import { AuthContext, UIContext } from '@/context'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
 import ChildCareOutlinedIcon from '@mui/icons-material/ChildCareOutlined'
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
 import FemaleOutlinedIcon from '@mui/icons-material/FemaleOutlined'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined'
@@ -120,7 +121,7 @@ export const Sidebar = () => {
                   <ListItemIcon>
                     <ShoppingCartOutlinedIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Orders" />
+                  <ListItemText primary="My Orders" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding onClick={logoutUser}>
@@ -148,23 +149,31 @@ export const Sidebar = () => {
             <Divider />
             <ListSubheader>Admin dashboard</ListSubheader>
             <List>
-              <ListItem disablePadding>
+              <ListItem disablePadding onClick={() => navigateTo('/admin')}>
                 <ListItemButton>
                   <ListItemIcon>
-                    <AccountCircleOutlinedIcon />
+                    <DashboardOutlinedIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Profile" />
+                  <ListItemText primary="Dashboard" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <LocalMallOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Products" />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding onClick={() => navigateTo('/admin/orders')}>
                 <ListItemButton>
                   <ListItemIcon>
                     <ShoppingCartOutlinedIcon />
                   </ListItemIcon>
-                  <ListItemText primary="My Orders" />
+                  <ListItemText primary="Orders" />
                 </ListItemButton>
               </ListItem>
-              <ListItem disablePadding>
+              <ListItem disablePadding onClick={() => navigateTo('/admin/users')}>
                 <ListItemButton>
                   <ListItemIcon>
                     <GroupOutlinedIcon />
