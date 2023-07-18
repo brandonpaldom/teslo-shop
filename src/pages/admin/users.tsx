@@ -20,20 +20,7 @@ export default function UsersPage() {
     }
   }, [data])
 
-  if (error) {
-    return (
-      <AdminLayout title="Users | Teslo">
-        <Typography variant="h1" component="h1">
-          Users
-        </Typography>
-        <Typography variant="h2" sx={{ mt: 2 }}>
-          Oops! Something went wrong.
-        </Typography>
-      </AdminLayout>
-    )
-  }
-
-  if (isLoading) {
+  if (error || isLoading) {
     return (
       <AdminLayout title="Users | Teslo">
         <Typography variant="h1" component="h1">

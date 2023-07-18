@@ -22,20 +22,7 @@ export default function DashboardPage() {
     return () => clearInterval(interval)
   }, [])
 
-  if (error) {
-    return (
-      <AdminLayout title="Dashboard | Teslo">
-        <Typography variant="h1" component="h1">
-          Dashboard
-        </Typography>
-        <Typography variant="h2" sx={{ mt: 2 }}>
-          Oops! Something went wrong.
-        </Typography>
-      </AdminLayout>
-    )
-  }
-
-  if (isLoading) {
+  if (error || isLoading) {
     return (
       <AdminLayout title="Dashboard | Teslo">
         <Typography variant="h1" component="h1">

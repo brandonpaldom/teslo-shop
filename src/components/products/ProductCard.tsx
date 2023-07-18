@@ -27,7 +27,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
         <Link href={`/product/${product.slug}`} prefetch={false}>
           <CardActionArea>
             {product.inStock === 0 && <Chip label="Out of Stock" color="primary" sx={{ position: 'absolute', top: 10, left: 10 }} />}
-            <CardMedia component="img" image={`/products/${productImage}`} alt={product.title} onLoad={() => setIsImageLoaded(true)} />
+            <CardMedia component="img" image={productImage} alt={product.title} onLoad={() => setIsImageLoaded(true)} />
           </CardActionArea>
         </Link>
       </Card>

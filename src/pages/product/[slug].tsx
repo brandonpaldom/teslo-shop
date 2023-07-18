@@ -79,7 +79,6 @@ const ProductPage: NextPage<Props> = ({ product }) => {
                 Size
               </Typography>
               <SizeSelector
-                // selectedSize={product.sizes[1]}
                 selectedSize={cartProduct.size}
                 sizes={product.sizes}
                 handleSelectedSize={selectedSize}
@@ -118,6 +117,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         slug,
       },
     })),
+
     fallback: 'blocking',
   }
 }
@@ -139,6 +139,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       product,
     },
-    // revalidate: 60 * 60 * 24,
   }
 }

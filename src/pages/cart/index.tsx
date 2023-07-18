@@ -14,11 +14,6 @@ export default function CartPage() {
   const router = useRouter()
   const { cart } = useContext(CartContext)
 
-  // if (cart.length === 0) {
-  //   router.replace('/cart/empty')
-  //   return null
-  // }
-
   useEffect(() => {
     if (cart.length === 0) {
       router.replace('/cart/empty')

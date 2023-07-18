@@ -5,13 +5,14 @@ import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
+import LinearProgress from '@mui/material/LinearProgress'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { GetServerSideProps } from 'next'
-import { getProviders, getSession, signIn } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 type Inputs = {
@@ -21,6 +22,8 @@ type Inputs = {
 
 export default function LoginPage() {
   const router = useRouter()
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
+  const [error, setError] = useState(false)
 
   const {
     register,
@@ -28,18 +31,19 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<Inputs>()
 
-  const [error, setError] = useState(false)
-  // const [providers, setProviders] = useState<any>({})
-
-  // useEffect(() => {
-  //   getProviders().then((data) => {
-  //     setProviders(data)
-  //   })
-  // }, [])
-
   const onLogin: SubmitHandler<Inputs> = async ({ email, password }) => {
-    setError(false)
-    await signIn('credentials', { email, password })
+    setIsLoggingIn(true)
+
+    try {
+      setError(false)
+      await signIn('credentials', { email, password })
+    } catch (error) {
+      console.error(error)
+      setError(true)
+      setIsLoggingIn(false)
+    } finally {
+      setIsLoggingIn(false)
+    }
   }
 
   return (
@@ -75,24 +79,14 @@ export default function LoginPage() {
               error={!!errors.password}
               helperText={errors.password?.message}
             />
-            <Button type="submit" variant="contained" color="secondary">
+            <Button type="submit" variant="contained" color="secondary" disabled={isLoggingIn}>
               Sign in
             </Button>
+            {isLoggingIn && <LinearProgress color="secondary" />}
             <Link href="/auth/register">
               <Typography sx={{ textAlign: 'center', textDecoration: 'underline' }}>Forgot password?</Typography>
             </Link>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* {Object.values(providers).map((provider: any) => {
-                if (provider.name === 'Credentials') {
-                  return null
-                }
-
-                return (
-                  <Button key={provider.name} variant="outlined" color="inherit" fullWidth onClick={() => signIn(provider.id)}>
-                    Sign in with {provider.name}
-                  </Button>
-                )
-              })} */}
               <Button variant="outlined" color="inherit" fullWidth onClick={() => signIn('github')} startIcon={<GitHubIcon />}>
                 Sign in with GitHub
               </Button>

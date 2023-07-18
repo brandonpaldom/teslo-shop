@@ -5,6 +5,7 @@ import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
+import LinearProgress from '@mui/material/LinearProgress'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { GetServerSideProps } from 'next'
@@ -32,9 +33,11 @@ export default function RegisterPage() {
 
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [isRegistering, setIsRegistering] = useState(false)
 
   const onRegister: SubmitHandler<Inputs> = async ({ name, email, password }) => {
     setError(false)
+    setIsRegistering(true)
     const { error, message } = await registerUser(name, email, password)
 
     if (error) {
@@ -48,7 +51,14 @@ export default function RegisterPage() {
       return
     }
 
-    await signIn('credentials', { email, password })
+    try {
+      await signIn('credentials', { email, password })
+    } catch (error) {
+      console.error(error)
+      setError(true)
+    } finally {
+      setIsRegistering(false)
+    }
   }
 
   return (
@@ -97,6 +107,7 @@ export default function RegisterPage() {
             <Button type="submit" variant="contained" color="secondary">
               Create account
             </Button>
+            {isRegistering && <LinearProgress />}
             <Divider />
             <Typography sx={{ textAlign: 'center' }}>Already have an account?</Typography>
             <Link href={router.query.p ? `/auth/login?p=${router.query.p}` : '/auth/login'}>

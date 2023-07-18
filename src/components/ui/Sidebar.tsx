@@ -157,7 +157,7 @@ export const Sidebar = () => {
                   <ListItemText primary="Dashboard" />
                 </ListItemButton>
               </ListItem>
-              <ListItem disablePadding>
+              <ListItem disablePadding onClick={() => navigateTo('/admin/products')}>
                 <ListItemButton>
                   <ListItemIcon>
                     <LocalMallOutlinedIcon />

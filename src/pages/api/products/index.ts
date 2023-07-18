@@ -16,7 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 async function getProducts(req: NextApiRequest, res: NextApiResponse<Data>) {
   const { gender = 'all' } = req.query
-
   let conditions = {}
 
   if (gender !== 'all' && SHOP_CONSTANTS.validGenders.includes(gender as string)) {
@@ -27,5 +26,13 @@ async function getProducts(req: NextApiRequest, res: NextApiResponse<Data>) {
   const products = await Product.find(conditions).select('images inStock price slug title -_id').lean()
   await db.disconnect()
 
-  res.status(200).json(products)
+  const updatedProducts = products.map((product) => {
+    product.images = product.images.map((image) => {
+      return image.includes('http') ? image : `${process.env.HOST_NAME}products/${image}`
+    })
+
+    return product
+  })
+
+  res.status(200).json(updatedProducts)
 }

@@ -3,10 +3,16 @@ import { AuthContext } from '@/context'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+import { useRouter } from 'next/router'
 import { useContext } from 'react'
 
 export default function EmptyCartPage() {
+  const router = useRouter()
   const { isLoggedIn } = useContext(AuthContext)
+
+  const navigateTo = (url: string) => {
+    router.push(url)
+  }
 
   return (
     <ShopLayout title="Teslo | Your Cart" description="Teslo | Your Cart">
@@ -19,11 +25,11 @@ export default function EmptyCartPage() {
             Your cart is empty.
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
-            <Button variant="contained" color="secondary" fullWidth>
+            <Button variant="contained" color="secondary" fullWidth onClick={() => navigateTo('/')}>
               Continue Shopping
             </Button>
             {!isLoggedIn && (
-              <Button variant="outlined" fullWidth>
+              <Button variant="outlined" fullWidth onClick={() => navigateTo('/auth/login')}>
                 Sign In
               </Button>
             )}

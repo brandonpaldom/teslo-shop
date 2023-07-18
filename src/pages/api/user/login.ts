@@ -26,7 +26,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 async function loginUser(req: NextApiRequest, res: NextApiResponse<Data>) {
   const { email = '', password = '' } = req.body
-
   await db.connect()
   const user = await User.findOne({ email })
   await db.disconnect()
@@ -40,7 +39,6 @@ async function loginUser(req: NextApiRequest, res: NextApiResponse<Data>) {
   }
 
   const { role, name, _id } = user
-
   const token = jwt.generateToken(_id, email)
 
   return res.status(200).json({

@@ -22,7 +22,6 @@ async function searchProducts(req: NextApiRequest, res: NextApiResponse<Data>) {
   }
 
   query = query.toString().toLowerCase()
-
   await db.connect()
 
   const products = await Product.find({
@@ -32,6 +31,5 @@ async function searchProducts(req: NextApiRequest, res: NextApiResponse<Data>) {
     .lean()
 
   await db.disconnect()
-
   res.status(200).json(products)
 }

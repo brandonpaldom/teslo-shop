@@ -39,7 +39,9 @@ export default function SummaryPage() {
     router.replace(`/orders/${message}`)
   }
 
-  if (!shipingAddress) return null
+  if (!shipingAddress) {
+    return null
+  }
 
   return (
     <ShopLayout title="Teslo | Checkout" description="Teslo | Your Cart">

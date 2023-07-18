@@ -37,20 +37,7 @@ const columns: GridColDef[] = [
 export default function OrdersPage() {
   const { data, error, isLoading } = useSWR<OrderInterface[]>('/api/admin/orders')
 
-  if (error) {
-    return (
-      <AdminLayout title="Orders | Teslo">
-        <Typography variant="h1" component="h1">
-          Orders
-        </Typography>
-        <Typography variant="h2" sx={{ mt: 2 }}>
-          Oops! Something went wrong.
-        </Typography>
-      </AdminLayout>
-    )
-  }
-
-  if (isLoading) {
+  if (error || isLoading) {
     return (
       <AdminLayout title="Orders | Teslo">
         <Typography variant="h1" component="h1">
@@ -65,7 +52,7 @@ export default function OrdersPage() {
 
   const rows = data!.map((order) => ({
     id: order._id,
-    email: (order.user as UserInterface).email,
+    email: (order.user as UserInterface).email || '',
     name: (order.user as UserInterface).name,
     total: order.total,
     isPaid: order.isPaid,

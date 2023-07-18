@@ -21,7 +21,7 @@ export const ProductSlideshow: FC<Props> = ({ images }) => {
       {images.map((image) => (
         <SwiperSlide key={image}>
           <div style={{ position: 'relative', width: '100%', height: 'auto', aspectRatio: '1 / 1' }}>
-            <Image src={`/products/${image}`} alt={image} fill sizes="(max-width: 600px) 100vh, 66vw" priority />
+            <Image src={image} alt={image} fill sizes="(max-width: 600px) 100vh, 66vw" priority />
           </div>
         </SwiperSlide>
       ))}

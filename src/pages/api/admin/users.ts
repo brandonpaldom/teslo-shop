@@ -21,7 +21,6 @@ async function getUsers(req: NextApiRequest, res: NextApiResponse<Data>) {
   await db.connect()
   const users = await User.find().select('-password').lean()
   await db.disconnect()
-
   return res.status(200).json(users)
 }
 
@@ -50,6 +49,5 @@ async function updateUser(req: NextApiRequest, res: NextApiResponse<Data>) {
   user.role = role
   await user.save()
   await db.disconnect()
-
   return res.status(200).json({ message: 'User updated' })
 }
