@@ -3,7 +3,7 @@ import { ProductInterface } from '@/interfaces'
 import { Product } from '@/models'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-type Data = { message: string } | ProductInterface
+type Data = { message: string } | ProductInterface | string[]
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
@@ -24,5 +24,9 @@ async function getProduct(req: NextApiRequest, res: NextApiResponse<Data>) {
     return res.status(404).json({ message: 'Product not found' })
   }
 
-  res.status(200).json(product)
+  const updatedProduct = product.images.map((image) => {
+    return image.includes('http') ? image : `${process.env.HOST_NAME}products/${image}`
+  })
+
+  res.status(200).json(updatedProduct)
 }

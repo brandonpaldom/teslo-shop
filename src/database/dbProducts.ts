@@ -13,7 +13,8 @@ export const getProductBySlug = async (slug: string): Promise<ProductInterface |
   }
 
   product.images = product.images.map((image) => {
-    return image.includes('http') ? image : `${process.env.HOST_NAME}products/${image}`
+    // return image.includes('http') ? image : `${process.env.HOST_NAME}products/${image}`
+    return image.includes('http') ? image : `/products/${image}`
   })
 
   return JSON.parse(JSON.stringify(product))
