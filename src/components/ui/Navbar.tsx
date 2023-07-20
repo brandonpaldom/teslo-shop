@@ -49,7 +49,6 @@ export const Navbar = () => {
   return (
     <>
       <AppBar>
-        <Banner />
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <Image src={'/teslo.svg'} alt="Teslo Logo" width={93} height={12} />

@@ -1,5 +1,5 @@
 import { CartContext } from '@/context'
-import { CartInterface, OrderInterface, OrderItemInterface } from '@/interfaces'
+import { CartInterface, OrderItemInterface } from '@/interfaces'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'

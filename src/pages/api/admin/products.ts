@@ -76,8 +76,6 @@ async function updateProduct(req: NextApiRequest, res: NextApiResponse<Data>) {
     return res.status(400).json({ message: 'At least two images are required' })
   }
 
-  // TODO
-
   try {
     await db.connect()
     const product = await Product.findById(_id)
