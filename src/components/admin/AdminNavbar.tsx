@@ -7,38 +7,12 @@ import Typography from '@mui/material/Typography'
 import 'animate.css'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 
 import { Banner } from '../ui'
 
-interface NavItem {
-  title: string
-  href: string
-}
-
-const navItems: NavItem[] = [
-  { title: 'Men', href: '/category/men' },
-  { title: 'Women', href: '/category/women' },
-  { title: 'Kids', href: '/category/kid' },
-]
-
 export const AdminNavbar = () => {
-  const router = useRouter()
-  const { pathname } = router
   const { toggleSidebar } = useContext(UIContext)
-  const { numberOfProducts } = useContext(CartContext)
-
-  const [search, setSearch] = useState('')
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-
-  const onSearch = () => {
-    if (setSearch.length === 0) {
-      return
-    }
-
-    router.push(`/search/${search}`)
-  }
 
   return (
     <>
