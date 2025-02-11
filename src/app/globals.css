@@ -2,20 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  input[type="url"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"],
+  input[type="time"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="checkbox"],
+  input[type="radio"],
+  select,
+  select[multiple],
+  textarea {
+    @apply block w-full rounded border-transparent bg-neutral-100 text-[0.875rem] font-medium focus:border-neutral-200 focus:ring-0;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .btn {
+    @apply flex h-8 items-center justify-center rounded px-4 text-[0.875rem] font-medium;
+  }
+  .btn-lg {
+    @apply flex h-10 items-center justify-center rounded px-4 text-[0.875rem] font-medium;
+  }
+  .btn-primary {
+    @apply bg-primary text-white transition-colors duration-300 hover:bg-primary-dark;
+  }
+  .btn-secondary {
+    @apply bg-neutral-100 transition-colors duration-300 hover:bg-neutral-200;
+  }
+  .btn-ghost {
+    @apply transition-colors duration-300 hover:bg-neutral-100;
+  }
+  .btn-outline {
+    @apply border-2 border-black text-black transition-colors duration-300 hover:bg-black hover:text-white;
+  }
+  .card {
+    @apply rounded bg-white p-6 shadow-lg;
+  }
 }
