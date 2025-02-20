@@ -1,7 +1,10 @@
+import { auth } from "@/auth";
 import { Title } from "@/components";
 import Link from "next/link";
 
-export default function EmptyCartPage() {
+export default async function EmptyCartPage() {
+  const session = await auth();
+
   return (
     <div className="mx-auto grid max-w-[640px] grid-cols-1 gap-6 p-6 lg:max-w-[1024px]">
       <Title title="Cart" />
@@ -11,9 +14,14 @@ export default function EmptyCartPage() {
           <Link href="/" className="btn-lg btn-primary md:w-[320px]">
             Continue Shopping
           </Link>
-          <Link href="/auth/login" className="btn-lg btn-outline md:w-[320px]">
-            Login
-          </Link>
+          {!session && (
+            <Link
+              href="/auth/login"
+              className="btn-lg btn-outline md:w-[320px]"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </div>

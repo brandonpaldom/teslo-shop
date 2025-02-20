@@ -1,6 +1,6 @@
 export const revalidate = 60;
 
-import { getProductsPagination } from "@/actions";
+import { getProductsPagination } from "@/actions/shop";
 import { NoProducts, Pagination, ProductsGrid, Title } from "@/components";
 import { ProductGender } from "@prisma/client";
 import { notFound } from "next/navigation";

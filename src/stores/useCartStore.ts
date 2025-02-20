@@ -58,9 +58,16 @@ export const useCartStore = create<CartState>()(
         const salesTax = subtotal * 0.07;
         const total = subtotal + salesTax;
 
-        return { totalItems, subtotal, salesTax, total };
+        return {
+          totalItems,
+          subtotal,
+          salesTax,
+          total,
+        };
       },
     }),
-    { name: "cart" },
+    {
+      name: "cart",
+    },
   ),
 );

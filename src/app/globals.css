@@ -2,28 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  input[type="text"],
-  input[type="password"],
-  input[type="email"],
-  input[type="number"],
-  input[type="url"],
-  input[type="date"],
-  input[type="datetime-local"],
-  input[type="month"],
-  input[type="week"],
-  input[type="time"],
-  input[type="search"],
-  input[type="tel"],
-  input[type="checkbox"],
-  input[type="radio"],
-  select,
-  select[multiple],
-  textarea {
-    @apply block w-full rounded border-transparent bg-neutral-100 text-[0.875rem] font-medium focus:border-neutral-200 focus:ring-0;
-  }
-}
-
 @layer components {
   .btn {
     @apply flex h-8 items-center justify-center rounded px-4 text-[0.875rem] font-medium;
@@ -45,5 +23,11 @@
   }
   .card {
     @apply rounded bg-white p-6 shadow-lg;
+  }
+  .input {
+    @apply block w-full rounded border border-transparent bg-neutral-100 p-2.5 text-[0.875rem] text-neutral-900 focus:border-primary focus:ring-primary;
+  }
+  .input-error {
+    @apply block w-full rounded border border-red-500 bg-neutral-100 p-2.5 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500;
   }
 }

@@ -51,3 +51,41 @@ enum ProductGender {
   women
   kids
 }
+
+enum UserRole {
+  admin
+  user
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  password      String
+  role          UserRole  @default(user)
+  image         String?
+  Address       Address?
+}
+
+model Country {
+  id      String    @id
+  name    String
+  Address Address[]
+}
+
+model Address {
+  id        String  @id @default(uuid())
+  firstName String
+  lastName  String
+  address   String
+  apartment String?
+  zipCode   String
+  city      String
+  state     String
+  country   Country @relation(fields: [countryId], references: [id])
+  countryId String
+  phone     String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @unique
+}

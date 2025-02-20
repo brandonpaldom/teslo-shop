@@ -21,7 +21,7 @@ export default function CartPage() {
 
   useEffect(() => {
     if (cartItems.length === 0 && isClient) {
-      router.replace("/empty");
+      router.replace("/cart/empty");
     }
   }, [cartItems, isClient, router]);
 

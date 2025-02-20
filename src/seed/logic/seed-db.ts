@@ -1,6 +1,8 @@
 import { prisma } from "../../lib/prisma";
 import { createProducts } from "./createProducts";
 import { createProductCategories } from "./createProductCategory";
+import { createUsers } from "./createUsers";
+import { createCountries } from "./createCountries";
 
 async function deleteAll() {
   if (process.env.NODE_ENV === "production") {
@@ -9,7 +11,9 @@ async function deleteAll() {
   }
 
   console.log("Deleting all data...");
-
+  await prisma.address.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.country.deleteMany();
   await prisma.productImage.deleteMany();
   await prisma.product.deleteMany();
   await prisma.productCategory.deleteMany();
@@ -18,10 +22,14 @@ async function deleteAll() {
 async function main() {
   console.log("Start seeding...");
   await deleteAll();
-  console.log("Creating product categories...");
-  await createProductCategories();
+  console.log("Creating users...");
+  await createUsers();
   console.log("Creating products...");
   await createProducts();
+  console.log("Creating product categories...");
+  await createProductCategories();
+  console.log("Creating countries...");
+  await createCountries();
 }
 
 main()

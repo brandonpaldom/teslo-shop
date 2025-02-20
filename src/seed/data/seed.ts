@@ -1,3 +1,5 @@
+import bcryptjs from "bcryptjs";
+
 export enum ProductSize {
   S = "S",
   M = "M",
@@ -37,12 +39,40 @@ export interface ProductSeedData {
   tags: string[];
 }
 
+export interface UserSeedData {
+  name: string;
+  email: string;
+  password: string;
+  role: "admin" | "user";
+}
+
+export interface CountrySeedData {
+  id: string;
+  name: string;
+}
+
 export interface SeedData {
+  users: UserSeedData[];
   categories: { name: ProductCategory }[];
   products: ProductSeedData[];
+  countries: CountrySeedData[];
 }
 
 export const initialData: SeedData = {
+  users: [
+    {
+      name: "Admin",
+      email: "admin@mail.com",
+      password: bcryptjs.hashSync("12345678", 10),
+      role: "admin",
+    },
+    {
+      name: "Client",
+      email: "client@mail.com",
+      password: bcryptjs.hashSync("12345678", 10),
+      role: "user",
+    },
+  ],
   categories: [
     { name: ProductCategory.TEE },
     { name: ProductCategory.HOODIE },
@@ -357,6 +387,20 @@ export const initialData: SeedData = {
         "8764741-00-A-3.jpg",
       ],
       tags: [""],
+    },
+  ],
+  countries: [
+    {
+      id: "US",
+      name: "United States",
+    },
+    {
+      id: "CA",
+      name: "Canada",
+    },
+    {
+      id: "MX",
+      name: "Mexico",
     },
   ],
 };

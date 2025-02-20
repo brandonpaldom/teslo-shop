@@ -1,9 +1,9 @@
 export const revalidate = 60 * 60 * 24;
 
-import { getProductBySlug } from "@/actions";
+import { getProductBySlug } from "@/actions/shop";
 import { ProductMobileSlideshow, ProductSlideshow } from "@/components";
 import AddToCart from "@/components/shop/add-to-cart";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -20,10 +20,7 @@ async function getProductData(slug: string) {
   return product;
 }
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = await getProductData((await params).slug);
 
   return {
