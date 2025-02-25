@@ -1,6 +1,6 @@
 export const revalidate = 60 * 60 * 24;
 
-import { getProductBySlug } from "@/actions/shop";
+import { getProductBySlug } from "@/actions/products";
 import { ProductMobileSlideshow, ProductSlideshow } from "@/components";
 import AddToCart from "@/components/shop/add-to-cart";
 import { Metadata } from "next";

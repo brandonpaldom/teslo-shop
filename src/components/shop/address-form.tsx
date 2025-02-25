@@ -11,7 +11,7 @@ import { useAddressStore } from "@/stores";
 import FormCheckbox from "../ui/form-checkbox";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { createAddress, removeAddress } from "@/actions/shop";
+import { createAddress, removeAddress } from "@/actions/checkout";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -46,8 +46,8 @@ export default function AddressForm({ countries, addressData = {} }: Props) {
   }, []);
 
   const onSubmit: SubmitHandler<AddressData> = async (data: AddressData) => {
-    setAddress(data);
     const { saveAddress, ...rest } = data;
+    setAddress(rest);
 
     if (saveAddress) {
       await createAddress(rest, session?.user.id as string);

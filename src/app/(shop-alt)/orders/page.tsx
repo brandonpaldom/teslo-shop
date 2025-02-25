@@ -1,16 +1,17 @@
+import { getOrderByUser } from "@/actions/order";
 import { Title } from "@/components";
 import clsx from "clsx";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { IoCardOutline } from "react-icons/io5";
 
-const orders = [
-  { id: 1234, fullName: "John Doe", status: "Order paid" },
-  { id: 2345, fullName: "Jane Doe", status: "Pending payment" },
-  { id: 3456, fullName: "John Smith", status: "Order paid" },
-  { id: 4567, fullName: "Jane Smith", status: "Pending payment" },
-];
+export default async function OrdersPage() {
+  const { success, data: orders } = await getOrderByUser();
 
-export default function OrdersPage() {
+  if (!success) {
+    redirect("/auth/login");
+  }
+
   return (
     <div className="mx-auto grid max-w-[640px] grid-cols-1 gap-6 p-6 lg:max-w-[1024px]">
       <Title title="View Order History" />
@@ -30,18 +31,20 @@ export default function OrdersPage() {
             {orders.map((order) => (
               <tr key={order.id} className="border-b border-neutral-200">
                 <td className="px-6 py-4">{order.id}</td>
-                <td className="px-6 py-4">{order.fullName}</td>
+                <td className="px-6 py-4">
+                  {order.OrderAddress.firstName} {order.OrderAddress.lastName}
+                </td>
                 <td className="px-6 py-4">
                   <span
                     className={clsx(
                       "inline-flex items-center rounded-full px-2.5 py-0.5 text-[0.75rem] font-medium",
-                      order.status === "Order paid"
+                      order.isPaid
                         ? "bg-green-50 text-green-800"
                         : "bg-red-50 text-red-800",
                     )}
                   >
                     <IoCardOutline className="mr-1 h-3.5 w-3.5" />
-                    {order.status}
+                    {order.isPaid ? "Order paid" : "Pending payment"}
                   </span>
                 </td>
                 <td className="px-6 py-4">

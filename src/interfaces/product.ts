@@ -1,3 +1,5 @@
+import { ProductGender, ProductSize } from "./shared";
+
 export interface Product {
   id?: string;
   name: string;
@@ -11,23 +13,3 @@ export interface Product {
   images: string[];
   tags: string[];
 }
-
-export interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  size: ProductSize;
-  image: string;
-}
-
-export type ProductSize = "S" | "M" | "L" | "XL" | "XXL" | "XXXL";
-export type ProductGender = "men" | "women" | "kids";
-export type ProductCategory =
-  | "tee"
-  | "hoodie"
-  | "sweatshirt"
-  | "jacket"
-  | "hat"
-  | "beanie"
-  | "socks";

@@ -4,10 +4,10 @@
 
 @layer components {
   .btn {
-    @apply flex h-8 items-center justify-center rounded px-4 text-[0.875rem] font-medium;
+    @apply flex h-8 items-center justify-center rounded px-4 text-[0.875rem] font-medium disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-lg {
-    @apply flex h-10 items-center justify-center rounded px-4 text-[0.875rem] font-medium;
+    @apply flex h-10 items-center justify-center rounded px-4 text-[0.875rem] font-medium disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
     @apply bg-primary text-white transition-colors duration-300 hover:bg-primary-dark;

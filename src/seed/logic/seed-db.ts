@@ -11,6 +11,9 @@ async function deleteAll() {
   }
 
   console.log("Deleting all data...");
+  await prisma.orderAddress.deleteMany();
+  await prisma.orderItem.deleteMany();
+  await prisma.order.deleteMany();
   await prisma.address.deleteMany();
   await prisma.user.deleteMany();
   await prisma.country.deleteMany();

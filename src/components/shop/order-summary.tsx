@@ -1,41 +1,69 @@
+"use client";
+
 import Link from "next/link";
 import Divider from "../ui/divider";
+import { formatCurrency } from "@/utils";
+import { useEffect, useState } from "react";
 
 interface Props {
-  itemsCount: number;
-  subtotal: string;
-  shipping: string;
-  salesTax: string;
-  totalDue: string;
+  totalItems: number;
+  subtotal: number;
+  salesTax: number;
+  totalDue: number;
+  shipping?: number | string;
   shippingAddress: {
-    name: string;
-    addressLine1: string;
-    addressLine2: string;
-    country: string;
+    id: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    apartment: string;
+    zipCode: string;
+    city: string;
+    state: string;
+    country?: string;
+    countryId?: string;
     phone: string;
+    orderId: string;
   };
   billingAddress: {
-    name: string;
-    addressLine1: string;
-    addressLine2: string;
+    id: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    apartment: string;
+    zipCode: string;
+    city: string;
+    state: string;
+    country?: string;
+    countryId?: string;
+    phone: string;
+    orderId: string;
   };
   isEditable?: boolean;
 }
 
 export default function OrderSummary({
-  itemsCount,
+  totalItems,
   subtotal,
-  shipping,
   salesTax,
   totalDue,
+  shipping = "Free",
   shippingAddress,
   billingAddress,
   isEditable = false,
 }: Props) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
+
   return (
     <>
       <h2 className="text-[1.25rem] font-semibold">
-        Order Summary ({itemsCount} items)
+        Order Summary ({totalItems} {totalItems === 1 ? "item" : "items"})
       </h2>
       <div className="flex flex-col gap-2 text-[0.875rem]">
         <div className="flex justify-between">
@@ -47,10 +75,17 @@ export default function OrderSummary({
           )}
         </div>
         <div className="font-semibold">
-          <p>{shippingAddress.name}</p>
-          <p>{shippingAddress.addressLine1}</p>
-          <p>{shippingAddress.addressLine2}</p>
-          <p>{shippingAddress.country}</p>
+          <p>
+            {shippingAddress.firstName} {shippingAddress.lastName}
+          </p>
+          <p>
+            {shippingAddress.address} {shippingAddress.apartment}
+          </p>
+          <p>
+            {shippingAddress.city}, {shippingAddress.state}{" "}
+            {shippingAddress.zipCode}
+          </p>
+          <p>{shippingAddress.country || shippingAddress.countryId}</p>
           <p>{shippingAddress.phone}</p>
         </div>
       </div>
@@ -64,28 +99,37 @@ export default function OrderSummary({
           )}
         </div>
         <div className="font-semibold">
-          <p>{billingAddress.name}</p>
-          <p>{billingAddress.addressLine1}</p>
-          <p>{billingAddress.addressLine2}</p>
+          <p>
+            {billingAddress.firstName} {billingAddress.lastName}
+          </p>
+          <p>
+            {billingAddress.address} {billingAddress.apartment}
+          </p>
+          <p>
+            {billingAddress.city}, {billingAddress.state}{" "}
+            {billingAddress.zipCode}
+          </p>
         </div>
       </div>
       <Divider />
       <div className="flex flex-col gap-2 text-[0.875rem]">
         <div className="flex justify-between">
           <h2>Subtotal</h2>
-          <p>{subtotal}</p>
+          <p>{formatCurrency(subtotal)}</p>
         </div>
         <div className="flex justify-between">
           <p>Shipping</p>
-          <p>{shipping}</p>
+          <p>
+            {typeof shipping === "number" ? formatCurrency(shipping) : shipping}
+          </p>
         </div>
         <div className="flex justify-between">
           <p>Sales Tax</p>
-          <p>{salesTax}</p>
+          <p>{formatCurrency(salesTax)}</p>
         </div>
         <div className="flex justify-between font-semibold">
           <h2 className="text-[1.25rem]">Total Due</h2>
-          <p>{totalDue}</p>
+          <p>{formatCurrency(totalDue)}</p>
         </div>
       </div>
     </>

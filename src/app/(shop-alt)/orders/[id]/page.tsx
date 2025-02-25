@@ -1,3 +1,4 @@
+import { getOrderById } from "@/actions/order";
 import {
   Divider,
   OrderSummary,
@@ -5,30 +6,23 @@ import {
   ProductList,
   Title,
 } from "@/components";
-import { initialData } from "@/seed/data/seed";
+import { ProductSize } from "@/interfaces";
+import { redirect } from "next/navigation";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
-const productsInCart = initialData.products.slice(0, 3);
-
-const shippingAddress = {
-  name: "Brandon Palmeros",
-  addressLine1: "3941 J St",
-  addressLine2: "Sacramento, CA 95819-3628",
-  country: "United States",
-  phone: "+12015550123",
-};
-
-const billingAddress = {
-  name: "Brandon Palmeros",
-  addressLine1: "3941 J St",
-  addressLine2: "Sacramento, CA 95819-3628",
-};
-
 export default async function OrderPage({ params }: Props) {
   const id = (await params).id;
+  const result = await getOrderById(id);
+
+  if (!result.success) {
+    redirect("/");
+  }
+
+  const order = result.data;
+  const address = order.OrderAddress;
 
   return (
     <div className="mx-auto grid max-w-[640px] grid-cols-1 gap-6 p-6 lg:max-w-[1024px]">
@@ -36,21 +30,29 @@ export default async function OrderPage({ params }: Props) {
       <Divider className="lg:hidden" />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_400px] lg:gap-24">
         <div className="flex flex-col gap-6">
-          <PaymentStatus isPaid />
-          <ProductList products={productsInCart} />
+          <PaymentStatus isPaid={order.isPaid} />
+          <ProductList
+            products={order.OrderItem.map((item) => ({
+              id: item.product.slug,
+              name: item.product.name,
+              price: item.price,
+              quantity: item.quantity,
+              size: item.size as ProductSize,
+              image: item.product.images[0]?.url,
+            }))}
+          />
         </div>
         <Divider className="lg:hidden" />
         <div className="lg:card flex h-fit flex-col gap-4">
           <OrderSummary
-            itemsCount={3}
-            subtotal="$120"
-            shipping="Free"
-            salesTax="$10.50"
-            totalDue="$130.50"
-            shippingAddress={shippingAddress}
-            billingAddress={billingAddress}
+            totalItems={order.totalItems}
+            subtotal={order.subtotal}
+            salesTax={order.salesTax}
+            totalDue={order.totalDue}
+            shippingAddress={address}
+            billingAddress={address}
           />
-          <PaymentStatus isPaid />
+          <PaymentStatus isPaid={order.isPaid} />
         </div>
       </div>
     </div>

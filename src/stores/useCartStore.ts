@@ -10,8 +10,9 @@ interface CartState {
     totalItems: number;
     subtotal: number;
     salesTax: number;
-    total: number;
+    totalDue: number;
   };
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartState>()(
@@ -48,23 +49,24 @@ export const useCartStore = create<CartState>()(
         })),
       getSummary: () => {
         const totalItems = get().cartItems.reduce(
-          (total, item) => total + item.quantity,
+          (totalDue, item) => totalDue + item.quantity,
           0,
         );
         const subtotal = get().cartItems.reduce(
-          (total, item) => total + item.price * item.quantity,
+          (totalDue, item) => totalDue + item.price * item.quantity,
           0,
         );
         const salesTax = subtotal * 0.07;
-        const total = subtotal + salesTax;
+        const totalDue = subtotal + salesTax;
 
         return {
           totalItems,
           subtotal,
           salesTax,
-          total,
+          totalDue,
         };
       },
+      clearCart: () => set({ cartItems: [] }),
     }),
     {
       name: "cart",
