@@ -46,16 +46,8 @@ export interface OrderProductImage {
 
 export interface UserOrder {
   id: string;
-  totalItems: number;
-  subtotal: number;
-  salesTax: number;
-  totalDue: number;
-  isPaid: boolean;
-  paidAt?: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
-  userId: string;
   OrderAddress: UserOrderAddress;
+  isPaid: boolean;
 }
 
 export interface UserOrderAddress {

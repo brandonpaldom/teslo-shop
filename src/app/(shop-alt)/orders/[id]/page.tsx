@@ -6,7 +6,7 @@ import {
   ProductList,
   Title,
 } from "@/components";
-import { ProductSize } from "@/interfaces";
+import { Address, ProductSize } from "@/interfaces";
 import { redirect } from "next/navigation";
 
 interface Props {
@@ -15,14 +15,14 @@ interface Props {
 
 export default async function OrderPage({ params }: Props) {
   const id = (await params).id;
-  const result = await getOrderById(id);
+  const { success, data } = await getOrderById(id);
 
-  if (!result.success) {
+  if (!success || !data) {
     redirect("/");
   }
 
-  const order = result.data;
-  const address = order.OrderAddress;
+  const order = data;
+  const address = order.OrderAddress as Address;
 
   return (
     <div className="mx-auto grid max-w-[640px] grid-cols-1 gap-6 p-6 lg:max-w-[1024px]">

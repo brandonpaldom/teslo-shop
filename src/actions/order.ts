@@ -1,11 +1,10 @@
 "use server";
 
 import { auth } from "@/auth";
-import { Order, UserOrder } from "@/interfaces";
 import { prisma } from "@/lib/prisma";
-import { handleError, Response } from "@/utils";
+import { handleError } from "@/utils";
 
-export const getOrderById = async (id: string): Promise<Response<Order>> => {
+export const getOrderById = async (id: string) => {
   try {
     const session = await auth();
     const userId = session?.user.id;
@@ -79,7 +78,7 @@ export const getOrderById = async (id: string): Promise<Response<Order>> => {
   }
 };
 
-export const getOrderByUser = async (): Promise<Response<UserOrder[]>> => {
+export const getOrderByUser = async () => {
   try {
     const session = await auth();
     const userId = session?.user.id;

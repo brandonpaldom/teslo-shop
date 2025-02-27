@@ -3,7 +3,7 @@
 import QuantitySelector from "./quantity-selector";
 import SizeSelector from "./size-selector";
 import Button from "../ui/button";
-import { CartItem, Product, ProductSize } from "@/interfaces";
+import type { CartItem, Product, ProductSize } from "@/interfaces";
 import { useState } from "react";
 import { useCartStore } from "@/stores";
 
@@ -18,11 +18,11 @@ export default function AddToCart({ product }: Props) {
 
   const handleAddToCart = () => {
     const productToAdd: CartItem = {
-      id: product.id!,
+      id: product.id ?? "",
       name: product.name,
       price: product.price,
       quantity,
-      size: selectedSize!,
+      size: selectedSize as ProductSize,
       image: product.images[0],
     };
 

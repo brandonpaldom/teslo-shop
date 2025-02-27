@@ -1,12 +1,12 @@
 "use client";
 
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "../ui/button";
 import { authenticate, registerUser } from "@/actions/auth";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { RegisterData, registerSchema } from "@/schemas";
+import { type RegisterData, registerSchema } from "@/schemas";
 import FormErrorMessage from "../ui/form-error-message";
 import FormInput from "../ui/form-input";
 

@@ -1,4 +1,4 @@
-import { ProductGender, ProductSize } from "./shared";
+import type { ProductGender, ProductSize } from "./shared";
 
 export interface Product {
   id?: string;

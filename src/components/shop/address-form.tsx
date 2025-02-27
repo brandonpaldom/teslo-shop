@@ -1,12 +1,12 @@
 "use client";
 
-import { AddressData, addressSchema } from "@/schemas";
+import { type AddressData, addressSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import Button from "../ui/button";
 import FormInput from "../ui/form-input";
 import FormSelect from "../ui/form-select";
-import { Address, Country } from "@/interfaces";
+import type { Address, Country } from "@/interfaces";
 import { useAddressStore } from "@/stores";
 import FormCheckbox from "../ui/form-checkbox";
 import { useEffect } from "react";

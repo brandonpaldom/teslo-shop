@@ -6,7 +6,8 @@ export interface Address {
   zipCode: string;
   city: string;
   state: string;
-  country: string;
+  country?: string;
+  countryId?: string;
   phone: string;
   saveAddress?: boolean;
 }

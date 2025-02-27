@@ -1,16 +1,19 @@
 import { getOrderByUser } from "@/actions/order";
 import { Title } from "@/components";
+import { UserOrder } from "@/interfaces";
 import clsx from "clsx";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { IoCardOutline } from "react-icons/io5";
 
 export default async function OrdersPage() {
-  const { success, data: orders } = await getOrderByUser();
+  const { success, data } = await getOrderByUser();
 
-  if (!success) {
-    redirect("/auth/login");
+  if (!success || !data) {
+    redirect("/");
   }
+
+  const orders = data as UserOrder[];
 
   return (
     <div className="mx-auto grid max-w-[640px] grid-cols-1 gap-6 p-6 lg:max-w-[1024px]">

@@ -1,6 +1,6 @@
 "use server";
 
-import { ProductGender } from "@/interfaces";
+import type { ProductGender } from "@/interfaces";
 import { prisma } from "@/lib/prisma";
 
 interface PaginationParams {

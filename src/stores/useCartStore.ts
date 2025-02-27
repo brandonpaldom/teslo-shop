@@ -1,4 +1,4 @@
-import { CartItem } from "@/interfaces";
+import type { CartItem } from "@/interfaces";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 

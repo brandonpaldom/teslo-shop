@@ -4,6 +4,7 @@ import Link from "next/link";
 import Divider from "../ui/divider";
 import { formatCurrency } from "@/utils";
 import { useEffect, useState } from "react";
+import type { Address } from "@/interfaces";
 
 interface Props {
   totalItems: number;
@@ -11,34 +12,8 @@ interface Props {
   salesTax: number;
   totalDue: number;
   shipping?: number | string;
-  shippingAddress: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    address: string;
-    apartment: string;
-    zipCode: string;
-    city: string;
-    state: string;
-    country?: string;
-    countryId?: string;
-    phone: string;
-    orderId: string;
-  };
-  billingAddress: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    address: string;
-    apartment: string;
-    zipCode: string;
-    city: string;
-    state: string;
-    country?: string;
-    countryId?: string;
-    phone: string;
-    orderId: string;
-  };
+  shippingAddress: Address;
+  billingAddress: Address;
   isEditable?: boolean;
 }
 

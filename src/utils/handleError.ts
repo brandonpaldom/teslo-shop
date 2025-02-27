@@ -2,6 +2,7 @@ export type ErrorResponse = {
   success: false;
   message: string;
   error?: unknown;
+  data: null;
 };
 
 export type SuccessResponse<T> = {
@@ -20,5 +21,6 @@ export const handleError = (
     success: false,
     message: defaultMessage,
     error: error instanceof Error ? error.message : error,
+    data: null,
   };
 };

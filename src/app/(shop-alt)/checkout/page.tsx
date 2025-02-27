@@ -5,12 +5,14 @@ import { Divider, OrderSummary, ProductList, Title } from "@/components";
 import { useAddressStore, useCartStore } from "@/stores";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useShallow } from "zustand/shallow";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const cartItems = useCartStore((state) => state.cartItems);
   const address = useAddressStore((state) => state.address);
@@ -19,8 +21,19 @@ export default function CheckoutPage() {
     useShallow((state) => state.getSummary()),
   );
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (cartItems.length === 0 && isClient && !isNavigating) {
+      router.replace("/cart/empty");
+    }
+  }, [cartItems, isClient, router, isNavigating]);
+
   const handlePlaceOrder = async () => {
     setIsPlacingOrder(true);
+    setError(null);
 
     const itemsToOrder = cartItems.map((item) => ({
       id: item.id,
@@ -32,12 +45,15 @@ export default function CheckoutPage() {
 
     if (!response.success) {
       setIsPlacingOrder(false);
-      setError(response.message);
+      setError(response.message ?? "An unknown error occurred");
       return;
     }
 
+    const orderId = response.data?.order.id;
+
     clearCart();
-    router.replace(`/orders/${response.data.prismaTx.order.id}`);
+    setIsNavigating(true);
+    router.replace(`/orders/${orderId}`);
 
     setTimeout(() => {
       setIsPlacingOrder(false);

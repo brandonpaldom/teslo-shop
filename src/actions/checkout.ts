@@ -1,14 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import {
-  Address,
-  Country,
-  Order,
-  OrderAddress,
-  Product,
-  ProductToOrder,
-} from "@/interfaces";
+import type { Address, Country, ProductToOrder } from "@/interfaces";
 import { prisma } from "@/lib/prisma";
 import { handleError, Response } from "@/utils";
 
@@ -131,6 +124,7 @@ export const getAddress = async (
       return {
         success: false,
         message: "Address not found",
+        data: null,
       };
     }
 
@@ -151,136 +145,132 @@ export const getAddress = async (
 export const processOrder = async (
   productsToOrder: ProductToOrder[],
   address: Address,
-): Promise<
-  Response<{
-    prismaTx: {
-      order: Order;
-      orderAddress: OrderAddress;
-      products: Product[];
+) => {
+  const session = await auth();
+  const userId = session?.user.id;
+  if (!userId) {
+    return {
+      success: false,
+      message: "User not authenticated",
     };
-  }>
-> => {
-  try {
-    const session = await auth();
-    const userId = session?.user.id;
+  }
 
-    if (!userId) {
-      return {
-        success: false,
-        message: "User not authenticated",
-      };
-    }
-
-    const products = await prisma.product.findMany({
-      where: {
-        id: {
-          in: productsToOrder.map((item) => item.id),
-        },
+  const products = await prisma.product.findMany({
+    where: {
+      id: {
+        in: productsToOrder.map((item) => item.id),
       },
-    });
+    },
+  });
 
-    const totalItems = productsToOrder.reduce(
-      (acc, item) => acc + item.quantity,
-      0,
-    );
+  const totalItems = productsToOrder.reduce(
+    (acc, item) => acc + item.quantity,
+    0,
+  );
 
-    const subtotal = products.reduce((acc, product) => {
-      const quantity =
-        productsToOrder.find((item) => item.id === product.id)?.quantity || 0;
-      acc += product.price.toNumber() * quantity;
+  const { subtotal, salesTax, totalDue } = productsToOrder.reduce(
+    (acc, item) => {
+      const quantity = item.quantity;
+      const product = products.find((p) => p.id === item.id);
+      if (!product) {
+        throw new Error("Product not found");
+      }
+      const subtotal = product.price.toNumber() * quantity;
+      acc.subtotal += parseFloat(subtotal.toFixed(2));
+      acc.salesTax += parseFloat((subtotal * 0.07).toFixed(2));
+      acc.totalDue += parseFloat((subtotal + acc.salesTax).toFixed(2));
       return acc;
-    }, 0);
-    const salesTax = subtotal * 0.07;
-    const totalDue = subtotal + salesTax;
+    },
+    { subtotal: 0, salesTax: 0, totalDue: 0 },
+  );
 
-    try {
-      const prismaTx = await prisma.$transaction(async (tx) => {
-        const stockUpdates = products.map((product) => {
-          const quantity = productsToOrder
-            .filter((item) => item.id === product.id)
-            .reduce((acc, item) => acc + item.quantity, 0);
+  try {
+    const prismaTx = await prisma.$transaction(async (tx) => {
+      const updateStock = products.map((product) => {
+        const quantity = productsToOrder
+          .filter((item) => item.id === product.id)
+          .reduce((acc, item) => acc + item.quantity, 0);
 
-          if (quantity === 0) {
-            throw new Error("Product quantity is zero");
-          }
+        if (quantity === 0) {
+          throw new Error("Product quantity is zero");
+        }
 
-          return tx.product.update({
-            where: {
-              id: product.id,
-            },
-            data: {
-              stock: { decrement: quantity },
-            },
-          });
-        });
-
-        const stockUpdateResults = await Promise.all(stockUpdates);
-
-        stockUpdateResults.forEach((result) => {
-          if (result.stock < 0) {
-            throw new Error("Product out of stock");
-          }
-        });
-
-        const order = await tx.order.create({
+        return tx.product.update({
+          where: {
+            id: product.id,
+          },
           data: {
-            userId,
-            totalItems,
-            subtotal,
-            salesTax,
-            totalDue,
-            OrderItem: {
-              createMany: {
-                data: productsToOrder.map((item) => ({
-                  productId: item.id,
-                  quantity: item.quantity,
-                  size: item.size,
-                  price:
-                    products.find((product) => product.id === item.id)?.price ??
-                    0,
-                })),
-              },
+            stock: {
+              decrement: quantity,
             },
           },
         });
+      });
 
-        const processedOrder = {
-          ...order,
-          salesTax: order.salesTax.toNumber(),
-          subtotal: order.subtotal.toNumber(),
-          totalDue: order.totalDue.toNumber(),
-        };
+      const stockUpdateResults = await Promise.all(updateStock);
 
-        const processedProducts = products.map((product) => ({
-          ...product,
-          price: product.price.toNumber(),
-        }));
+      stockUpdateResults.forEach((result) => {
+        if (result.stock < 0) {
+          throw new Error("Product out of stock");
+        }
+      });
 
-        const { country, ...rest } = address;
-        const orderAddress = await tx.orderAddress.create({
-          data: {
-            ...rest,
-            countryId: country,
-            orderId: order.id,
+      const order = await tx.order.create({
+        data: {
+          userId,
+          totalItems,
+          subtotal,
+          salesTax,
+          totalDue,
+          OrderItem: {
+            createMany: {
+              data: productsToOrder.map((item) => ({
+                productId: item.id,
+                quantity: item.quantity,
+                size: item.size,
+                price:
+                  products.find((product) => product.id === item.id)?.price ??
+                  0,
+              })),
+            },
           },
-        });
+        },
+      });
 
-        return {
-          order: processedOrder,
-          orderAddress,
-          products: processedProducts,
-        };
+      const processedOrder = {
+        ...order,
+        salesTax: order.salesTax.toNumber(),
+        subtotal: order.subtotal.toNumber(),
+        totalDue: order.totalDue.toNumber(),
+      };
+
+      const processedProducts = products.map((product) => ({
+        ...product,
+        price: product.price.toNumber(),
+      }));
+
+      const { country, ...rest } = address;
+      const orderAddress = await tx.orderAddress.create({
+        data: {
+          ...rest,
+          countryId: country,
+          orderId: order.id,
+        },
       });
 
       return {
-        success: true,
-        data: {
-          prismaTx,
-        },
+        order: processedOrder,
+        orderAddress,
+        products: processedProducts,
       };
-    } catch (error) {
-      return handleError(error, "Failed to process order. Please try again.");
-    }
+    });
+
+    return {
+      success: true,
+      data: {
+        order: prismaTx.order,
+      },
+    };
   } catch (error) {
     return handleError(error, "Failed to process order. Please try again.");
   }
