@@ -3,6 +3,7 @@ import {
   Divider,
   OrderSummary,
   PaymentStatus,
+  PayPalButton,
   ProductList,
   Title,
 } from "@/components";
@@ -52,7 +53,11 @@ export default async function OrderPage({ params }: Props) {
             shippingAddress={address}
             billingAddress={address}
           />
-          <PaymentStatus isPaid={order.isPaid} />
+          {order.isPaid ? (
+            <PaymentStatus isPaid={order.isPaid} />
+          ) : (
+            <PayPalButton amount={order.totalDue} orderId={order.id} />
+          )}
         </div>
       </div>
     </div>

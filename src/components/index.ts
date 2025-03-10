@@ -6,6 +6,7 @@ export { default as AddressForm } from "./shop/address-form";
 export { default as NoProducts } from "./shop/no-products";
 export { default as OrderSummary } from "./shop/order-summary";
 export { default as PaymentStatus } from "./shop/payment-status";
+export { default as PayPalButton } from "./shop/paypal-button";
 export { default as ProductsGrid } from "./shop/product-grid";
 export { default as ProductList } from "./shop/product-list";
 export { default as ProductListItem } from "./shop/product-list-item";
@@ -29,4 +30,4 @@ export { default as Sidebar } from "./ui/sidebar";
 export { default as SidebarItems } from "./ui/sidebar-client";
 export { default as Title } from "./ui/title";
 
-export { default as AuthProvider } from "./providers/auth-provider";
+export { default as Providers } from "./providers/providers";

@@ -275,3 +275,29 @@ export const processOrder = async (
     return handleError(error, "Failed to process order. Please try again.");
   }
 };
+
+export const setOrderPaid = async (orderId: string, transactionId: string) => {
+  try {
+    const order = await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        transactionId,
+      },
+    });
+
+    if (!order) {
+      return {
+        success: false,
+        message: "Order not found",
+      };
+    }
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    return handleError(error, "Failed to process order. Please try again.");
+  }
+};

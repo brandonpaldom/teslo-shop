@@ -6,6 +6,7 @@ import Button from "../ui/button";
 import type { CartItem, Product, ProductSize } from "@/interfaces";
 import { useState } from "react";
 import { useCartStore } from "@/stores";
+import Link from "next/link";
 
 interface Props {
   product: Product;
@@ -15,6 +16,7 @@ export default function AddToCart({ product }: Props) {
   const addItemToCart = useCartStore((state) => state.addItemToCart);
   const [selectedSize, setSelectedSize] = useState<ProductSize | undefined>();
   const [quantity, setQuantity] = useState<number>(1);
+  const [isInCart, setIsInCart] = useState(false);
 
   const handleAddToCart = () => {
     const productToAdd: CartItem = {
@@ -29,6 +31,7 @@ export default function AddToCart({ product }: Props) {
     addItemToCart(productToAdd);
     setSelectedSize(undefined);
     setQuantity(1);
+    setIsInCart(true);
   };
 
   return (
@@ -68,6 +71,14 @@ export default function AddToCart({ product }: Props) {
         >
           Add to Cart
         </Button>
+      )}
+      {isInCart && (
+        <Link
+          href="/cart"
+          className="btn-lg btn-secondary mt-4 w-full text-sm font-semibold sm:w-[320px]"
+        >
+          Go to Cart
+        </Link>
       )}
     </>
   );
