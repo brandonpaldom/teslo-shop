@@ -4,13 +4,16 @@ import { Product } from "@/interfaces";
 import Link from "next/link";
 import { useState } from "react";
 import ImagePlaceholder from "../ui/image-placeholder";
+import { formatCurrency } from "@/utils";
 
 interface Props {
   product: Product;
 }
 
 export default function ProductGridItem({ product }: Props) {
-  const [currentImage, setCurrentImage] = useState(product.images[0] as string);
+  const [currentImage, setCurrentImage] = useState(
+    (product.images?.[0] ?? "") as string,
+  );
 
   return (
     <div className="flex flex-col">
@@ -21,8 +24,12 @@ export default function ProductGridItem({ product }: Props) {
             alt={product.name}
             width={1080}
             height={1080}
-            onMouseEnter={() => setCurrentImage(product.images[1] as string)}
-            onMouseLeave={() => setCurrentImage(product.images[0] as string)}
+            onMouseEnter={() =>
+              setCurrentImage((product.images?.[1] ?? "") as string)
+            }
+            onMouseLeave={() =>
+              setCurrentImage((product.images?.[0] ?? "") as string)
+            }
           />
         </div>
         {product.stock === 0 && (
@@ -36,7 +43,9 @@ export default function ProductGridItem({ product }: Props) {
           {product.name}
         </h3>
       </Link>
-      <p className="text-[0.875rem] font-semibold">${product.price}</p>
+      <p className="text-[0.875rem] font-semibold">
+        {formatCurrency(product.price as number)}
+      </p>
     </div>
   );
 }

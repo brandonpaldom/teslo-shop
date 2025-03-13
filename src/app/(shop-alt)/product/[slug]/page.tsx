@@ -1,4 +1,4 @@
-export const revalidate = 60 * 60 * 24;
+export const revalidate = 86400;
 
 import { getProductBySlug } from "@/actions/products";
 import { ProductMobileSlideshow, ProductSlideshow } from "@/components";
@@ -21,7 +21,8 @@ async function getProductData(slug: string) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = await getProductData((await params).slug);
+  const slug = (await params).slug;
+  const product = await getProductData(slug);
 
   return {
     title: `${product.name} | Teslo`,
@@ -35,7 +36,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const product = await getProductData((await params).slug);
+  const slug = (await params).slug;
+  const product = await getProductData(slug);
 
   if (!product) {
     notFound();

@@ -60,14 +60,15 @@ export const registerUser = async (
       message: "User created successfully.",
     };
   } catch (error) {
-    if (error.code === "P2002" && error.meta?.target?.includes("email")) {
-      return {
-        ok: false,
-        message: "An account already exists with this email.",
-      };
+    console.error("Error in registerUser", error);
+    if (error instanceof Error) {
+      if (error.message.includes("Unique constraint failed")) {
+        return {
+          ok: false,
+          message: "Email already exists.",
+        };
+      }
     }
-
-    console.error("Error in register", error);
     return {
       ok: false,
       message: "Something went wrong.",

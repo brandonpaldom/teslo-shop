@@ -1,15 +1,16 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import type { ProductGender, ProductSize } from "./shared";
 
 export interface Product {
   id?: string;
   name: string;
-  price: number;
+  price: Decimal | number;
   description: string;
   stock: number;
   slug: string;
   size: ProductSize[];
   gender: ProductGender;
-  images: ProductImage[] | string[];
+  images?: ProductImage[] | string[];
   tags: string[];
 }
 

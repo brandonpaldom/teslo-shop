@@ -16,7 +16,7 @@ export default function ProductListItem({
   return (
     <div key={product.id} className="flex items-center gap-4">
       <ImagePlaceholder
-        src={product.image}
+        src={product.image as string}
         alt={product.name}
         width={80}
         height={80}

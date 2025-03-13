@@ -58,6 +58,7 @@ export default function ProductForm({ product, categories }: Props) {
       tags: productToUse.tags?.join(", "),
       size: productToUse.size || [],
       images: undefined,
+      price: typeof productToUse.price === "number" ? productToUse.price : 0,
     },
     resolver: zodResolver(productSchema),
   });

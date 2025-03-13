@@ -3,7 +3,12 @@
 import QuantitySelector from "./quantity-selector";
 import SizeSelector from "./size-selector";
 import Button from "../ui/button";
-import type { CartItem, Product, ProductSize } from "@/interfaces";
+import type {
+  CartItem,
+  Product,
+  ProductImage,
+  ProductSize,
+} from "@/interfaces";
 import { useState } from "react";
 import { useCartStore } from "@/stores";
 import Link from "next/link";
@@ -22,10 +27,15 @@ export default function AddToCart({ product }: Props) {
     const productToAdd: CartItem = {
       id: product.id ?? "",
       name: product.name,
-      price: product.price,
+      price: product.price as number,
       quantity,
       size: selectedSize as ProductSize,
-      image: product.images[0].url,
+      image:
+        product.images && product.images.length > 0
+          ? typeof product.images[0] === "string"
+            ? product.images[0]
+            : (product.images[0] as ProductImage).url
+          : undefined,
     };
 
     addItemToCart(productToAdd);

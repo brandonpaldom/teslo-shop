@@ -36,10 +36,12 @@ export default function PayPalButton({ orderId, amount }: Props) {
     actions: CreateOrderActions,
   ): Promise<string> => {
     const transactionId = await actions.order.create({
+      intent: "CAPTURE",
       purchase_units: [
         {
           invoice_id: orderId,
           amount: {
+            currency_code: "USD",
             value: `${roundToTwoDecimals(amount)}`.toString(),
           },
         },
@@ -58,7 +60,7 @@ export default function PayPalButton({ orderId, amount }: Props) {
   const onApprove = async (data: OnApproveData, actions: OnApproveActions) => {
     const order = await actions.order?.capture();
     if (!order) return;
-    await checkPaypalPayment(order.id);
+    await checkPaypalPayment(order.id as string);
   };
 
   return <PayPalButtons createOrder={createOrder} onApprove={onApprove} />;

@@ -3,13 +3,11 @@ import { ProductForm, Title } from "@/components";
 import { redirect } from "next/navigation";
 
 interface Props {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function AdminProductPage({ params }: Props) {
-  const { slug } = await params;
+  const slug = (await params).slug;
 
   const [product, categories] = await Promise.all([
     getProductBySlug(slug),

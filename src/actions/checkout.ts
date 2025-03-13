@@ -48,6 +48,10 @@ const createOrReplaceAddress = async (
   userId: string,
 ): Promise<Response<Address>> => {
   try {
+    if (!address.country) {
+      throw new Error("Country is required");
+    }
+
     const existingAddress = await prisma.address.findUnique({
       where: {
         userId,
@@ -148,6 +152,7 @@ export const processOrder = async (
 ) => {
   const session = await auth();
   const userId = session?.user.id;
+
   if (!userId) {
     return {
       success: false,
@@ -248,6 +253,10 @@ export const processOrder = async (
         ...product,
         price: product.price.toNumber(),
       }));
+
+      if (!address.country) {
+        throw new Error("Country is required");
+      }
 
       const { country, ...rest } = address;
       const orderAddress = await tx.orderAddress.create({

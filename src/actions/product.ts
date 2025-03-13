@@ -96,8 +96,8 @@ export const createOrUpdateProduct = async (formData: FormData) => {
 
         await prisma.productImage.createMany({
           data: images.map((url) => ({
-            url,
-            productId: product.id,
+            url: url as string,
+            productId: product.id!,
           })),
         });
       }

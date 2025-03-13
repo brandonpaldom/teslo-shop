@@ -17,6 +17,7 @@ export default function ProductsTable({ products }: Props) {
       />
     );
   }
+
   return (
     <div className="relative overflow-x-auto">
       <table className="w-max text-left text-[0.875rem] text-neutral-500">
@@ -39,7 +40,7 @@ export default function ProductsTable({ products }: Props) {
             >
               <td className="px-6 py-4">
                 <ImagePlaceholder
-                  src={product.images[0] as string}
+                  src={(product.images?.[0] as string) || ""}
                   alt={product.name}
                   width={48}
                   height={48}
@@ -54,7 +55,9 @@ export default function ProductsTable({ products }: Props) {
                   {product.name}
                 </Link>
               </td>
-              <td className="px-6 py-4">{formatCurrency(product.price)}</td>
+              <td className="px-6 py-4">
+                {formatCurrency(Number(product.price))}
+              </td>
               <td className="px-6 py-4">{product.gender}</td>
               <td className="px-6 py-4">{product.stock}</td>
               <td className="px-6 py-4">{product.size.join(", ")}</td>

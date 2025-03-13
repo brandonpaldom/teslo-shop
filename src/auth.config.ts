@@ -5,6 +5,7 @@ export const protectedRoutes = ["/profile", "/checkout", "/orders"];
 export const adminRoutes = ["/admin"];
 
 export const authConfig = {
+  trustHost: true,
   pages: {
     signIn: "/auth/login",
   },
