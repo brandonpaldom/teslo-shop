@@ -6,6 +6,9 @@
   .btn {
     @apply flex h-8 items-center justify-center rounded px-4 text-[0.875rem] font-medium disabled:cursor-not-allowed disabled:opacity-50;
   }
+  .btn-sm {
+    @apply flex h-6 items-center justify-center rounded px-3 text-[0.75rem] font-medium disabled:cursor-not-allowed disabled:opacity-50;
+  }
   .btn-lg {
     @apply flex h-10 items-center justify-center rounded px-4 text-[0.875rem] font-medium disabled:cursor-not-allowed disabled:opacity-50;
   }
@@ -21,6 +24,9 @@
   .btn-outline {
     @apply border-2 border-black text-black transition-colors duration-300 hover:bg-black hover:text-white;
   }
+  .btn-danger {
+    @apply bg-red-50 text-red-600 transition-colors duration-300 hover:bg-red-100;
+  }
   .card {
     @apply rounded bg-white p-6 shadow-lg;
   }
@@ -29,5 +35,8 @@
   }
   .input-error {
     @apply block w-full rounded border border-red-500 bg-neutral-100 p-2.5 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500;
+  }
+  .checkbox {
+    @apply h-4 w-4 rounded border-transparent bg-neutral-100 text-primary focus:ring-2 focus:ring-primary;
   }
 }

@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { FieldError } from "react-hook-form";
 
 interface Props {
-  error?: FieldError;
+  error?: FieldError | { type?: string; message?: string };
   className?: string;
 }
 

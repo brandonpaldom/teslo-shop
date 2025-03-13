@@ -1,28 +1,28 @@
 "use client";
 
 import { Product } from "@/interfaces";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import ImagePlaceholder from "../ui/image-placeholder";
 
 interface Props {
   product: Product;
 }
 
 export default function ProductGridItem({ product }: Props) {
-  const [currentImage, setCurrentImage] = useState(product.images[0]);
+  const [currentImage, setCurrentImage] = useState(product.images[0] as string);
 
   return (
     <div className="flex flex-col">
       <Link href={`/product/${product.slug}`} className="relative">
         <div className="overflow-hidden">
-          <Image
-            src={`/products/${currentImage}`}
+          <ImagePlaceholder
+            src={currentImage}
             alt={product.name}
             width={1080}
             height={1080}
-            onMouseEnter={() => setCurrentImage(product.images[1])}
-            onMouseLeave={() => setCurrentImage(product.images[0])}
+            onMouseEnter={() => setCurrentImage(product.images[1] as string)}
+            onMouseLeave={() => setCurrentImage(product.images[0] as string)}
           />
         </div>
         {product.stock === 0 && (

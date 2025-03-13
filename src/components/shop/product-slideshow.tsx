@@ -16,7 +16,7 @@ import {
   Thumbs,
 } from "swiper/modules";
 import { useState } from "react";
-import Image from "next/image";
+import ImagePlaceholder from "../ui/image-placeholder";
 
 interface Props {
   images: string[];
@@ -46,8 +46,8 @@ export default function ProductSlideshow({ images, title, className }: Props) {
       >
         {images.map((image, index) => (
           <SwiperSlide key={index}>
-            <Image
-              src={`/products/${image}`}
+            <ImagePlaceholder
+              src={image}
               alt={title}
               width={1080}
               height={1080}
@@ -66,8 +66,8 @@ export default function ProductSlideshow({ images, title, className }: Props) {
       >
         {images.map((image, index) => (
           <SwiperSlide key={index}>
-            <Image
-              src={`/products/${image}`}
+            <ImagePlaceholder
+              src={image}
               alt={title}
               width={1080}
               height={1080}

@@ -25,7 +25,7 @@ export default function AddToCart({ product }: Props) {
       price: product.price,
       quantity,
       size: selectedSize as ProductSize,
-      image: product.images[0],
+      image: product.images[0].url,
     };
 
     addItemToCart(productToAdd);

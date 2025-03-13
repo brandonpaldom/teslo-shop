@@ -114,3 +114,39 @@ export const getOrderByUser = async () => {
     return handleError(error, "Failed to fetch orders. Please try again.");
   }
 };
+
+export const getAllOrders = async () => {
+  try {
+    const session = await auth();
+
+    if (session?.user.role !== "admin") {
+      return {
+        success: false,
+        message: "Unauthorized.",
+      };
+    }
+
+    const orders = await prisma.order.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      select: {
+        id: true,
+        isPaid: true,
+        OrderAddress: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
+    return {
+      success: true,
+      data: orders,
+    };
+  } catch (error) {
+    return handleError(error, "Failed to fetch orders. Please try again.");
+  }
+};

@@ -16,6 +16,7 @@ export const getProductBySlug = async (slug: string) => {
         images: {
           select: {
             url: true,
+            id: true,
           },
         },
       },
@@ -25,16 +26,14 @@ export const getProductBySlug = async (slug: string) => {
     });
 
     if (!product) {
-      throw new Error("Product not found");
+      return null;
     }
 
     const price = product.price ? product.price.toNumber() : 0;
-    const images = product.images?.map((image) => image.url) || [];
 
     return {
       ...product,
       price,
-      images,
     };
   } catch (error) {
     console.error("Failed to fetch product:", error);
@@ -98,5 +97,20 @@ export const getProductsPagination = async ({
   } catch (error) {
     console.error("Failed to fetch products:", error);
     throw new Error("Failed to fetch products. Please try again.");
+  }
+};
+
+export const getProductCategories = async () => {
+  try {
+    const categories = await prisma.productCategory.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
+
+    return categories;
+  } catch (error) {
+    console.error("Failed to fetch product categories:", error);
+    throw new Error("Failed to fetch product categories. Please try again.");
   }
 };

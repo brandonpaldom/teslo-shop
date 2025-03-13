@@ -20,8 +20,8 @@ export const createProducts = async () => {
       data: {
         ...productData,
         categoryId: categoriesMap[category],
-        size: product.size.map((size) => size),
-        gender: product.gender,
+        size: productData.size.map((size) => size),
+        gender: productData.gender,
       },
     });
 

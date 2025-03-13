@@ -51,9 +51,9 @@ export default function Navbar() {
         </Link>
       </div>
       <div className="flex items-center">
-        <Link href="/search" className="mr-4 hidden xl:flex">
+        <button className="mr-4 hidden xl:flex">
           <IoSearchOutline className="h-6 w-6" />
-        </Link>
+        </button>
         <div className="relative mr-2">
           <Link href="/cart" className="flex">
             <IoCartOutline className="h-6 w-6" />

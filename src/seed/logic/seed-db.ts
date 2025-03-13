@@ -27,10 +27,10 @@ async function main() {
   await deleteAll();
   console.log("Creating users...");
   await createUsers();
-  console.log("Creating products...");
-  await createProducts();
   console.log("Creating product categories...");
   await createProductCategories();
+  console.log("Creating products...");
+  await createProducts();
   console.log("Creating countries...");
   await createCountries();
 }

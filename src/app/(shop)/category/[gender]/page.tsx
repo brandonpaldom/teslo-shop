@@ -1,7 +1,7 @@
 export const revalidate = 60;
 
 import { getProductsPagination } from "@/actions/products";
-import { NoProducts, Pagination, ProductsGrid, Title } from "@/components";
+import { EmptyState, Pagination, ProductsGrid, Title } from "@/components";
 import { ProductGender } from "@prisma/client";
 import { notFound } from "next/navigation";
 
@@ -35,7 +35,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   });
 
   if (!products.length) {
-    return <NoProducts />;
+    return (
+      <EmptyState title="No products found" message="Try a different filter" />
+    );
   }
 
   return (

@@ -39,6 +39,25 @@ export const addressSchema = z.object({
   saveAddress: z.boolean(),
 });
 
+export const productSchema = z.object({
+  id: z.string().uuid().optional().nullable(),
+  name: z.string().min(3, "Minimum 3 characters"),
+  slug: z
+    .string()
+    .min(3, "Minimum 3 characters")
+    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Invalid slug format")
+    .transform((val) => val.toLowerCase()),
+  description: z.string().min(10, "Minimum 10 characters"),
+  price: z.coerce.number().min(0, "Price cannot be negative"),
+  stock: z.coerce.number().min(0, "Stock cannot be negative"),
+  tags: z.string().optional(),
+  gender: z.enum(["men", "women", "kids"]),
+  size: z.coerce.string().transform((val) => val.split(",")),
+  categoryId: z.string().min(1, "Category is required"),
+  images: z.any().optional(),
+});
+
 export type LoginData = z.infer<typeof loginSchema>;
 export type RegisterData = z.infer<typeof registerSchema>;
 export type AddressData = z.infer<typeof addressSchema>;
+export type ProductData = z.infer<typeof productSchema>;

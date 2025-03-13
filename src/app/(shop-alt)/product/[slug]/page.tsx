@@ -41,17 +41,19 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
 
+  const images = product.images.map((image) => image.url);
+
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-3 xl:gap-12 xl:px-12 xl:py-12">
       <div className="col-span-1 xl:col-span-2">
         <ProductMobileSlideshow
           title={product.name}
-          images={product.images}
+          images={images}
           className="block xl:hidden"
         />
         <ProductSlideshow
           title={product.name}
-          images={product.images}
+          images={images}
           className="hidden xl:block"
         />
       </div>

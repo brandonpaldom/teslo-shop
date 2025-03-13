@@ -4,15 +4,15 @@ import { type AddressData, addressSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import Button from "../ui/button";
-import FormInput from "../ui/form-input";
-import FormSelect from "../ui/form-select";
 import type { Address, Country } from "@/interfaces";
 import { useAddressStore } from "@/stores";
-import FormCheckbox from "../ui/form-checkbox";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { createAddress, removeAddress } from "@/actions/checkout";
 import { useRouter } from "next/navigation";
+import Input from "../ui/form/input";
+import Select from "../ui/form/select";
+import Checkbox from "../ui/form/checkbox";
 
 interface Props {
   countries: Country[];
@@ -63,66 +63,68 @@ export default function AddressForm({ countries, addressData = {} }: Props) {
       onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:max-w-[768px]"
     >
-      <FormInput
+      <Input
         label="First Name"
         id="firstName"
         register={register("firstName")}
         error={errors.firstName}
       />
-      <FormInput
+      <Input
         label="Last Name"
         id="lastName"
         register={register("lastName")}
         error={errors.lastName}
       />
-      <FormInput
+      <Input
         label="Address"
         id="address"
         register={register("address")}
         error={errors.address}
       />
-      <FormInput
+      <Input
         label="Apartment, suite, etc. (optional)"
         id="apartment"
         register={register("apartment")}
         error={errors.apartment}
       />
-      <FormInput
+      <Input
         label="Zip Code"
         id="zipCode"
         register={register("zipCode")}
         error={errors.zipCode}
       />
-      <FormInput
+      <Input
         label="City"
         id="city"
         register={register("city")}
         error={errors.city}
       />
-      <FormInput
+      <Input
         label="State"
         id="state"
         register={register("state")}
         error={errors.state}
       />
-      <FormSelect
+      <Select
         label="Country"
         id="country"
         register={register("country")}
         error={errors.country}
-        options={countries.map((country) => ({
-          value: country.id,
-          label: country.name,
-        }))}
-      />
-      <FormInput
+      >
+        {countries.map((country) => (
+          <option key={country.id} value={country.id}>
+            {country.name}
+          </option>
+        ))}
+      </Select>
+      <Input
         label="Phone Number"
         id="phone"
         type="tel"
         register={register("phone")}
         error={errors.phone}
       />
-      <FormCheckbox
+      <Checkbox
         label="Save this information for next time"
         id="saveAddress"
         register={register("saveAddress")}

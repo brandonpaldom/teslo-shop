@@ -16,7 +16,7 @@ export enum ProductGender {
 }
 
 export enum ProductCategory {
-  TEE = "see",
+  TEE = "tee",
   HOODIE = "hoodie",
   SWEATSHIRT = "sweatshirt",
   JACKET = "jacket",
@@ -135,7 +135,7 @@ export const initialData: SeedData = {
       name: "Men's Cybercab Tee",
       price: 40,
       description: "A futuristic tee inspired by the Tesla Cybercab.",
-      stock: 0,
+      stock: 10,
       slug: "mens-cybercab-tee",
       size: [
         ProductSize.S,

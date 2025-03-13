@@ -1,7 +1,8 @@
 import type { NextAuthConfig } from "next-auth";
 
-export const protectedRoutes = ["/profile", "/checkout", "/orders"];
 export const publicRoutes = ["/auth/login", "/auth/register"];
+export const protectedRoutes = ["/profile", "/checkout", "/orders"];
+export const adminRoutes = ["/admin"];
 
 export const authConfig = {
   pages: {
@@ -10,18 +11,39 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isProtectedRoute = protectedRoutes.some((route) =>
-        nextUrl.pathname.startsWith(route),
+      const pathname = nextUrl.pathname;
+
+      const isAdminRoute = adminRoutes.some((route) =>
+        pathname.startsWith(route),
       );
-      const isPublicRoute = publicRoutes.some((route) =>
-        nextUrl.pathname.startsWith(route),
-      );
-      if (isProtectedRoute && !isLoggedIn) {
-        return false;
+
+      if (isAdminRoute) {
+        const isAdmin = auth?.user?.role === "admin";
+        if (!isAdmin) {
+          return Response.redirect(new URL("/", nextUrl));
+        }
+        return true;
       }
+
+      const isProtectedRoute = protectedRoutes.some((route) =>
+        pathname.startsWith(route),
+      );
+
+      if (isProtectedRoute) {
+        if (!isLoggedIn) {
+          return false;
+        }
+        return true;
+      }
+
+      const isPublicRoute = publicRoutes.some((route) =>
+        pathname.startsWith(route),
+      );
+
       if (isLoggedIn && isPublicRoute) {
         return Response.redirect(new URL("/", nextUrl));
       }
+
       return true;
     },
     async jwt({ token, user }) {

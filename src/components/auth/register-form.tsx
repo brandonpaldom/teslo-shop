@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { type RegisterData, registerSchema } from "@/schemas";
 import FormErrorMessage from "../ui/form-error-message";
-import FormInput from "../ui/form-input";
+import Input from "../ui/form/input";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -42,27 +42,27 @@ export default function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-6">
-      <FormInput
+      <Input
         label="Name"
         id="name"
         register={register("name")}
         error={errors.name}
       />
-      <FormInput
+      <Input
         label="Email"
         id="email"
         type="email"
         register={register("email")}
         error={errors.email}
       />
-      <FormInput
+      <Input
         label="Password"
         id="password"
         type="password"
         register={register("password")}
         error={errors.password}
       />
-      <FormInput
+      <Input
         label="Confirm Password"
         id="confirmPassword"
         type="password"

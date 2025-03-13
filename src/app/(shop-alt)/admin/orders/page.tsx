@@ -1,10 +1,10 @@
-import { getOrderByUser } from "@/actions/order";
+import { getAllOrders } from "@/actions/order";
 import { EmptyState, OrdersTable, Title } from "@/components";
 import { UserOrder } from "@/interfaces";
 import { redirect } from "next/navigation";
 
-export default async function OrdersPage() {
-  const { success, data } = await getOrderByUser();
+export default async function AdminOrdersPage() {
+  const { success, data } = await getAllOrders();
 
   const orders = data as UserOrder[];
 
@@ -23,7 +23,7 @@ export default async function OrdersPage() {
 
   return (
     <div className="mx-auto grid max-w-[640px] grid-cols-1 gap-6 p-6 lg:max-w-[1024px]">
-      <Title title="View Order History" />
+      <Title title="All Orders" />
       <OrdersTable orders={orders} />
     </div>
   );

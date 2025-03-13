@@ -91,33 +91,27 @@ export default function SidebarClient({ isLogged, isAdmin }: Props) {
           {isLogged && isAdmin && <Divider />}
           {isAdmin && (
             <>
+              <p className="btn justify-start text-sm font-semibold">Admin</p>
               <Link
-                href="#"
+                href="/admin/products"
                 className="btn btn-ghost justify-start"
                 onClick={closeSidebar}
               >
-                Dashboard
+                Manage Products
               </Link>
               <Link
-                href="#"
+                href="/admin/orders"
                 className="btn btn-ghost justify-start"
                 onClick={closeSidebar}
               >
-                Products
+                Manage Orders
               </Link>
               <Link
-                href="#"
+                href="/admin/users"
                 className="btn btn-ghost justify-start"
                 onClick={closeSidebar}
               >
-                Orders
-              </Link>
-              <Link
-                href="#"
-                className="btn btn-ghost justify-start"
-                onClick={closeSidebar}
-              >
-                Users
+                Manage Users
               </Link>
             </>
           )}

@@ -9,7 +9,11 @@ export interface Product {
   slug: string;
   size: ProductSize[];
   gender: ProductGender;
-  // category: ProductCategory;
-  images: string[];
+  images: ProductImage[] | string[];
   tags: string[];
+}
+
+export interface ProductImage {
+  id: string;
+  url: string;
 }
