@@ -8,7 +8,7 @@ interface Props {
   basePath?: string;
 }
 
-export default function OrdersTable({ orders, basePath = "/orders" }: Props) {
+export default function OrdersTable({ orders, basePath = "/order" }: Props) {
   return (
     <div className="relative overflow-x-auto">
       <table className="w-max text-left text-[0.875rem] text-neutral-500">

@@ -53,7 +53,7 @@ export default function CheckoutPage() {
 
     clearCart();
     setIsNavigating(true);
-    router.replace(`/orders/${orderId}`);
+    router.replace(`/order/${orderId}`);
 
     setTimeout(() => {
       setIsPlacingOrder(false);

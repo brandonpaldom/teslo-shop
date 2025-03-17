@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 
 export const publicRoutes = ["/auth/login", "/auth/register"];
-export const protectedRoutes = ["/profile", "/checkout", "/orders"];
+export const protectedRoutes = ["/profile", "/checkout", "/orders", "/order"];
 export const adminRoutes = ["/admin"];
 
 export const authConfig = {

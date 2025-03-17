@@ -93,7 +93,7 @@ export const checkPaypalPayment = async (orderId: string) => {
       },
     });
 
-    revalidatePath(`/orders/${invoice_id}`);
+    revalidatePath(`/order/${invoice_id}`);
 
     return {
       success: true,
