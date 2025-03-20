@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getAllOrders } from "@/actions/order";
 import { EmptyState, OrdersTable, Title } from "@/components";
 import { UserOrder } from "@/interfaces";
