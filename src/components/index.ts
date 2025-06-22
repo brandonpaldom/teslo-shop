@@ -39,3 +39,13 @@ export { default as Input } from "./ui/form/input";
 export { default as Select } from "./ui/form/select";
 export { default as Textarea } from "./ui/form/textarea";
 export { default as ImagePlaceholder } from "./ui/image-placeholder";
+
+// Profile components
+export { 
+  ProfileHeader,
+  ProfileInfo,
+  ProfileSecurity,
+  ProfileAddress,
+  ProfileOrders,
+  ProfileTabs
+} from "./profile";

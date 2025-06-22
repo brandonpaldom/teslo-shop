@@ -17,9 +17,10 @@ import Checkbox from "../ui/form/checkbox";
 interface Props {
   countries: Country[];
   addressData?: Partial<Address>;
+  onSubmitSuccess?: () => void;
 }
 
-export default function AddressForm({ countries, addressData = {} }: Props) {
+export default function AddressForm({ countries, addressData = {}, onSubmitSuccess }: Props) {
   const router = useRouter();
   const {
     register,
@@ -55,7 +56,11 @@ export default function AddressForm({ countries, addressData = {} }: Props) {
       await removeAddress(session?.user.id as string);
     }
 
-    router.push("/checkout");
+    if (onSubmitSuccess) {
+      onSubmitSuccess();
+    } else {
+      router.push("/checkout");
+    }
   };
 
   return (
@@ -111,11 +116,13 @@ export default function AddressForm({ countries, addressData = {} }: Props) {
         register={register("country")}
         error={errors.country}
       >
-        {countries.map((country) => (
+        {Array.isArray(countries) ? countries.map((country) => (
           <option key={country.id} value={country.id}>
             {country.name}
           </option>
-        ))}
+        )) : (
+          <option value="">No countries available</option>
+        )}
       </Select>
       <Input
         label="Phone Number"
