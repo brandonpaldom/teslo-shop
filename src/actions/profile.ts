@@ -6,6 +6,7 @@ import { handleError } from "@/utils";
 import { revalidatePath } from "next/cache";
 import bcryptjs from "bcryptjs";
 import { z } from "zod";
+import { v2 as cloudinary } from "cloudinary";
 
 const profileSchema = z.object({
   name: z
@@ -212,6 +213,76 @@ export const changePassword = async (formData: FormData) => {
   }
 };
 
+// Configure Cloudinary
+cloudinary.config(process.env.CLOUDINARY_URL as string);
+
+export const uploadProfileImage = async (formData: FormData) => {
+  const session = await auth();
+  const userId = session?.user.id;
+
+  if (!userId) {
+    return {
+      success: false,
+      message: "User not authenticated.",
+    };
+  }
+
+  try {
+    // Log for debugging
+    console.log("Server action: uploadProfileImage called");
+    
+    const file = formData.get("image");
+    console.log("File received:", file ? "yes" : "no", typeof file);
+    
+    if (!file || !(file instanceof File)) {
+      console.error("Invalid file object received:", file);
+      return {
+        success: false,
+        message: "No valid image provided.",
+      };
+    }
+
+    console.log("Processing file:", file.name, file.type, file.size);
+
+    // Get the file buffer and convert to base64
+    const buffer = await file.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString("base64");
+    
+    // Upload to Cloudinary
+    console.log("Uploading to Cloudinary...");
+    const result = await cloudinary.uploader.upload(
+      `data:${file.type};base64,${base64}`, 
+      {
+        folder: "teslo-shop/profiles",
+        transformation: [
+          { width: 500, height: 500, crop: "fill", gravity: "face" }
+        ],
+      }
+    );
+    
+    console.log("Cloudinary upload successful:", result.secure_url);
+
+    // Update user record with new image URL
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { image: result.secure_url },
+    });
+    
+    console.log("User record updated with new image URL");
+
+    revalidatePath("/profile");
+
+    return {
+      success: true,
+      imageUrl: result.secure_url,
+    };
+  } catch (error) {
+    console.error("Profile image upload error:", error);
+    return handleError(error, "Failed to upload profile image. Please try again.");
+  }
+};
+
+// Keep this for backward compatibility
 export const updateUserImage = async (imageUrl: string) => {
   const session = await auth();
   const userId = session?.user.id;
