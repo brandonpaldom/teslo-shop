@@ -263,7 +263,7 @@ export const uploadProfileImage = async (formData: FormData) => {
     console.log("Cloudinary upload successful:", result.secure_url);
 
     // Update user record with new image URL
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
       where: { id: userId },
       data: { image: result.secure_url },
     });
@@ -295,7 +295,7 @@ export const updateUserImage = async (imageUrl: string) => {
   }
 
   try {
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
       where: { id: userId },
       data: { image: imageUrl },
     });
@@ -304,7 +304,7 @@ export const updateUserImage = async (imageUrl: string) => {
 
     return {
       success: true,
-      data: updatedUser,
+      data: { image: imageUrl },
     };
   } catch (error) {
     return handleError(error, "Failed to update profile image. Please try again.");

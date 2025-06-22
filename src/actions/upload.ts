@@ -43,7 +43,7 @@ export const uploadProfileImageBase64 = async (base64Image: string) => {
     console.log("Cloudinary upload successful:", result.secure_url);
 
     // Update user record with new image URL
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
       where: { id: userId },
       data: { image: result.secure_url },
     });

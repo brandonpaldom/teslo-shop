@@ -3,10 +3,9 @@
 import { Address, Country } from "@/interfaces";
 import Button from "@/components/ui/button";
 import { useState } from "react";
-import { createAddress, removeAddress } from "@/actions/checkout";
+import { removeAddress } from "@/actions/checkout";
 import { useRouter } from "next/navigation";
 import AddressForm from "../shop/address-form";
-import { useSession } from "next-auth/react";
 import { IoHomeOutline, IoTrashOutline, IoPencilOutline } from "react-icons/io5";
 
 interface ProfileAddressProps {

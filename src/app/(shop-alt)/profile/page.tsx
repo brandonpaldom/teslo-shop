@@ -36,11 +36,34 @@ export default async function ProfilePage() {
   const countries = (countriesSuccess && countriesData) ? 
     (Array.isArray(countriesData) ? countriesData : []) : [];
   
-  const orders = (ordersSuccess && ordersData) ? 
-    (Array.isArray(ordersData) ? ordersData : []) : [];
+  // Ensure orders match the UserOrder interface
+  const orders = (ordersSuccess && ordersData) 
+    ? (Array.isArray(ordersData) 
+        ? ordersData.map(order => ({
+            id: order.id,
+            isPaid: order.isPaid,
+            OrderAddress: order.OrderAddress || {
+              firstName: '',
+              lastName: ''
+            }
+          })) 
+        : []) 
+    : [];
   
-  const user = profileData;
-  const address = user.Address || null;
+  const user = profileData || {
+    id: '',
+    name: '',
+    email: '',
+    role: 'user',
+    image: null,
+    Address: null
+  };
+  // Convert the address to match the expected interface
+  const address = user.Address ? {
+    ...user.Address,
+    apartment: user.Address.apartment || undefined,
+    country: user.Address.country?.id
+  } : null;
 
   return (
     <div className="mx-auto grid max-w-[640px] grid-cols-1 gap-6 p-6 lg:max-w-[1024px]">

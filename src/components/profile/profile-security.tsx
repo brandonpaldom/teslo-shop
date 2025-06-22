@@ -29,7 +29,6 @@ export default function ProfileSecurity() {
   
   const {
     register,
-    handleSubmit,
     reset,
     formState: { errors },
   } = useForm<PasswordFormData>({
@@ -51,7 +50,7 @@ export default function ProfileSecurity() {
       } else {
         setErrorMessage(result.message || "Failed to change password");
       }
-    } catch (error) {
+    } catch {
       setErrorMessage("An unexpected error occurred");
     } finally {
       setIsSubmitting(false);

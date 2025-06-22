@@ -37,7 +37,6 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
   
   const {
     register,
-    handleSubmit,
     formState: { errors },
   } = useForm<ProfileFormData>({
     defaultValues: {
