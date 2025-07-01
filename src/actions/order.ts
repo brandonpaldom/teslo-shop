@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
-import { handleError } from "@/utils";
+import { auth } from '@/auth';
+import { prisma } from '@/lib/prisma';
+import { handleError } from '@/utils';
 
 export const getOrderById = async (id: string) => {
   try {
@@ -12,7 +12,7 @@ export const getOrderById = async (id: string) => {
     if (!userId) {
       return {
         success: false,
-        message: "User not authenticated.",
+        message: 'User not authenticated.',
       };
     }
 
@@ -47,14 +47,14 @@ export const getOrderById = async (id: string) => {
     if (!order) {
       return {
         success: false,
-        message: "Order not found.",
+        message: 'Order not found.',
       };
     }
 
-    if (session?.user.role !== "admin" && order.userId !== userId) {
+    if (session?.user.role !== 'admin' && order.userId !== userId) {
       return {
         success: false,
-        message: "Unauthorized.",
+        message: 'Unauthorized.',
       };
     }
 
@@ -74,7 +74,7 @@ export const getOrderById = async (id: string) => {
       data: processedOrder,
     };
   } catch (error) {
-    return handleError(error, "Failed to fetch order. Please try again.");
+    return handleError(error, 'Failed to fetch order. Please try again.');
   }
 };
 
@@ -86,7 +86,7 @@ export const getOrderByUser = async () => {
     if (!userId) {
       return {
         success: false,
-        message: "User not authenticated.",
+        message: 'User not authenticated.',
       };
     }
 
@@ -111,7 +111,7 @@ export const getOrderByUser = async () => {
       data: orders,
     };
   } catch (error) {
-    return handleError(error, "Failed to fetch orders. Please try again.");
+    return handleError(error, 'Failed to fetch orders. Please try again.');
   }
 };
 
@@ -119,16 +119,16 @@ export const getAllOrders = async () => {
   try {
     const session = await auth();
 
-    if (session?.user.role !== "admin") {
+    if (session?.user.role !== 'admin') {
       return {
         success: false,
-        message: "Unauthorized.",
+        message: 'Unauthorized.',
       };
     }
 
     const orders = await prisma.order.findMany({
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
       select: {
         id: true,
@@ -147,6 +147,6 @@ export const getAllOrders = async () => {
       data: orders,
     };
   } catch (error) {
-    return handleError(error, "Failed to fetch orders. Please try again.");
+    return handleError(error, 'Failed to fetch orders. Please try again.');
   }
 };

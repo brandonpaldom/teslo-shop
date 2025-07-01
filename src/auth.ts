@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
-import { authConfig } from "./auth.config";
-import Credentials from "next-auth/providers/credentials";
-import { z } from "zod";
-import { prisma } from "./lib/prisma";
-import bcryptjs from "bcryptjs";
+import bcryptjs from 'bcryptjs';
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+import { z } from 'zod';
+import { authConfig } from './auth.config';
+import { prisma } from './lib/prisma';
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
@@ -21,13 +21,15 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             where: { email: email.toLocaleLowerCase() },
           });
 
-          if (!user) return null;
+          if (!user) {
+            return null;
+          }
           const passwordsMatch = await bcryptjs.compare(
             password,
-            user.password,
+            user.password
           );
 
-          if (passwordsMatch)
+          if (passwordsMatch) {
             return {
               id: user.id,
               name: user.name,
@@ -36,6 +38,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
               role: user.role,
               image: user.image,
             };
+          }
         }
 
         return null;

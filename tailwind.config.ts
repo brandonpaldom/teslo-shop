@@ -1,13 +1,13 @@
-import type { Config } from "tailwindcss";
-import forms from "@tailwindcss/forms";
+import forms from '@tailwindcss/forms';
+import type { Config } from 'tailwindcss';
 
 export default {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
-        primary: "#4869D9",
-        "primary-dark": "#3C56AB",
+        primary: '#4869D9',
+        'primary-dark': '#3C56AB',
       },
     },
   },

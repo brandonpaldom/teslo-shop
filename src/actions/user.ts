@@ -1,9 +1,9 @@
-"use server";
+'use server';
 
-import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
-import { handleError } from "@/utils";
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
+import { prisma } from '@/lib/prisma';
+import { handleError } from '@/utils';
 
 export const getAllUser = async () => {
   const session = await auth();
@@ -12,7 +12,7 @@ export const getAllUser = async () => {
   if (!userId) {
     return {
       success: false,
-      message: "User not authenticated.",
+      message: 'User not authenticated.',
     };
   }
 
@@ -31,13 +31,13 @@ export const getAllUser = async () => {
       data: users,
     };
   } catch (error) {
-    return handleError(error, "Failed to fetch users. Please try again.");
+    return handleError(error, 'Failed to fetch users. Please try again.');
   }
 };
 
 export const updateUserRole = async (
   userId: string,
-  role: "admin" | "user",
+  role: 'admin' | 'user'
 ) => {
   const session = await auth();
   const adminId = session?.user.id;
@@ -45,7 +45,7 @@ export const updateUserRole = async (
   if (!adminId) {
     return {
       success: false,
-      message: "User not authenticated.",
+      message: 'User not authenticated.',
     };
   }
 
@@ -59,13 +59,13 @@ export const updateUserRole = async (
       },
     });
 
-    revalidatePath("/admin/users");
+    revalidatePath('/admin/users');
 
     return {
       success: true,
       data: user,
     };
   } catch (error) {
-    return handleError(error, "Failed to update user role. Please try again.");
+    return handleError(error, 'Failed to update user role. Please try again.');
   }
 };

@@ -1,5 +1,5 @@
-import { ProductSize } from "@/interfaces";
-import clsx from "clsx";
+import clsx from 'clsx';
+import type { ProductSize } from '@/interfaces';
 
 interface Props {
   selectedSize?: ProductSize;
@@ -18,13 +18,14 @@ export default function SizeSelector({
     <div className="flex gap-6">
       {availableSizes.map((size) => (
         <button
-          key={size}
-          onClick={() => onSizeSelection(size)}
           className={clsx(
-            "text-[0.875rem] font-semibold decoration-2 underline-offset-4 hover:underline disabled:no-underline disabled:opacity-30",
-            { underline: size === selectedSize },
+            'font-semibold text-[0.875rem] decoration-2 underline-offset-4 hover:underline disabled:no-underline disabled:opacity-30',
+            { underline: size === selectedSize }
           )}
           disabled={stockQuantity === 0 || !availableSizes.includes(size)}
+          key={size}
+          onClick={() => onSizeSelection(size)}
+          type="button"
         >
           {size}
         </button>

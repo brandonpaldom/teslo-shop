@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from 'next/image';
 
 interface Props {
   src: string;
@@ -12,28 +12,31 @@ interface Props {
 
 export default function ImagePlaceholder({
   src,
-  alt = "Image placeholder",
+  alt = 'Image placeholder',
   width = 300,
   height = 300,
-  className = "",
+  className = '',
   onMouseEnter,
   onMouseLeave,
 }: Props) {
-  const localSrc = src
-    ? src.startsWith("https")
-      ? src
-      : `/products/${src}`
-    : "/placeholder.jpg";
+  let localSrc = '/placeholder.jpg';
+  if (src) {
+    if (src.startsWith('https')) {
+      localSrc = src;
+    } else {
+      localSrc = `/products/${src}`;
+    }
+  }
 
   return (
     <Image
-      src={localSrc}
       alt={alt}
-      width={width}
-      height={height}
       className={`object-cover ${className}`}
+      height={height}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      src={localSrc}
+      width={width}
     />
   );
 }

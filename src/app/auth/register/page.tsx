@@ -1,5 +1,5 @@
-import { Divider, RegisterForm, Title } from "@/components";
-import Link from "next/link";
+import Link from 'next/link';
+import { Divider, RegisterForm, Title } from '@/components';
 
 export default function RegisterPage() {
   return (
@@ -7,7 +7,7 @@ export default function RegisterPage() {
       <Title title="Create Account" />
       <RegisterForm />
       <Divider />
-      <Link href="/auth/login" className="btn-lg btn-secondary">
+      <Link className="btn-lg btn-secondary" href="/auth/login">
         Login
       </Link>
     </div>

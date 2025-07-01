@@ -1,5 +1,5 @@
-import { Decimal } from "@prisma/client/runtime/library";
-import type { ProductGender, ProductSize } from "./shared";
+import type { Decimal } from '@prisma/client/runtime/library';
+import type { ProductGender, ProductSize } from './shared';
 
 export interface Product {
   id?: string;

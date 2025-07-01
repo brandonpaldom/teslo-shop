@@ -1,15 +1,20 @@
-"use server";
+'use server';
 
-import { auth } from "@/auth";
-import type { Address, Country, ProductToOrder } from "@/interfaces";
-import { prisma } from "@/lib/prisma";
-import { handleError, Response } from "@/utils";
+import type { Address } from '@prisma/client';
+import { auth } from '@/auth';
+import type {
+  Address as AddressInterface,
+  Country,
+  ProductToOrder,
+} from '@/interfaces';
+import { prisma } from '@/lib/prisma';
+import { handleError, type Response } from '@/utils';
 
 export const getCountries = async (): Promise<Response<Country[]>> => {
   try {
     const countries = await prisma.country.findMany({
       orderBy: {
-        name: "asc",
+        name: 'asc',
       },
     });
 
@@ -18,14 +23,14 @@ export const getCountries = async (): Promise<Response<Country[]>> => {
       data: countries,
     };
   } catch (error) {
-    return handleError(error, "Failed to fetch countries. Please try again.");
+    return handleError(error, 'Failed to fetch countries. Please try again.');
   }
 };
 
 export const createAddress = async (
-  address: Address,
-  userId: string,
-): Promise<Response<Address>> => {
+  address: AddressInterface,
+  userId: string
+): Promise<Response<AddressInterface>> => {
   try {
     const newAddress = await createOrReplaceAddress(address, userId);
     if (!newAddress.success) {
@@ -38,18 +43,18 @@ export const createAddress = async (
   } catch (error) {
     return handleError(
       error,
-      "Failed to save address. Please check your data and try again.",
+      'Failed to save address. Please check your data and try again.'
     );
   }
 };
 
 const createOrReplaceAddress = async (
-  address: Address,
-  userId: string,
-): Promise<Response<Address>> => {
+  address: AddressInterface,
+  userId: string
+): Promise<Response<AddressInterface>> => {
   try {
     if (!address.country) {
-      throw new Error("Country is required");
+      throw new Error('Country is required');
     }
 
     const existingAddress = await prisma.address.findUnique({
@@ -71,7 +76,7 @@ const createOrReplaceAddress = async (
       phone: address.phone,
     };
 
-    let result;
+    let result: Address;
     if (existingAddress) {
       result = await prisma.address.update({
         where: {
@@ -90,16 +95,16 @@ const createOrReplaceAddress = async (
       data: {
         ...result,
         country: result.countryId,
-        apartment: result.apartment || "",
+        apartment: result.apartment || '',
       },
     };
   } catch (error) {
-    return handleError(error, "Failed to save address. Please try again.");
+    return handleError(error, 'Failed to save address. Please try again.');
   }
 };
 
 export const removeAddress = async (
-  userId: string,
+  userId: string
 ): Promise<Response<boolean>> => {
   try {
     await prisma.address.delete({
@@ -112,13 +117,13 @@ export const removeAddress = async (
       data: true,
     };
   } catch (error) {
-    return handleError(error, "Failed to remove address. Please try again.");
+    return handleError(error, 'Failed to remove address. Please try again.');
   }
 };
 
 export const getAddress = async (
-  userId: string,
-): Promise<Response<Address>> => {
+  userId: string
+): Promise<Response<AddressInterface>> => {
   try {
     const address = await prisma.address.findUnique({
       where: { userId },
@@ -127,7 +132,7 @@ export const getAddress = async (
     if (!address) {
       return {
         success: false,
-        message: "Address not found",
+        message: 'Address not found',
         data: null,
       };
     }
@@ -138,17 +143,17 @@ export const getAddress = async (
       data: {
         ...rest,
         country: countryId,
-        apartment: apartment || "",
+        apartment: apartment || '',
       },
     };
   } catch (error) {
-    return handleError(error, "Failed to fetch address. Please try again.");
+    return handleError(error, 'Failed to fetch address. Please try again.');
   }
 };
 
 export const processOrder = async (
   productsToOrder: ProductToOrder[],
-  address: Address,
+  address: AddressInterface
 ) => {
   const session = await auth();
   const userId = session?.user.id;
@@ -156,7 +161,7 @@ export const processOrder = async (
   if (!userId) {
     return {
       success: false,
-      message: "User not authenticated",
+      message: 'User not authenticated',
     };
   }
 
@@ -170,7 +175,7 @@ export const processOrder = async (
 
   const totalItems = productsToOrder.reduce(
     (acc, item) => acc + item.quantity,
-    0,
+    0
   );
 
   const { subtotal, salesTax, totalDue } = productsToOrder.reduce(
@@ -178,15 +183,17 @@ export const processOrder = async (
       const quantity = item.quantity;
       const product = products.find((p) => p.id === item.id);
       if (!product) {
-        throw new Error("Product not found");
+        throw new Error('Product not found');
       }
-      const subtotal = product.price.toNumber() * quantity;
-      acc.subtotal += parseFloat(subtotal.toFixed(2));
-      acc.salesTax += parseFloat((subtotal * 0.07).toFixed(2));
-      acc.totalDue += parseFloat((subtotal + acc.salesTax).toFixed(2));
+      const itemSubtotal = product.price.toNumber() * quantity;
+      acc.subtotal += Number.parseFloat(itemSubtotal.toFixed(2));
+      acc.salesTax += Number.parseFloat((itemSubtotal * 0.07).toFixed(2));
+      acc.totalDue += Number.parseFloat(
+        (itemSubtotal + acc.salesTax).toFixed(2)
+      );
       return acc;
     },
-    { subtotal: 0, salesTax: 0, totalDue: 0 },
+    { subtotal: 0, salesTax: 0, totalDue: 0 }
   );
 
   try {
@@ -197,7 +204,7 @@ export const processOrder = async (
           .reduce((acc, item) => acc + item.quantity, 0);
 
         if (quantity === 0) {
-          throw new Error("Product quantity is zero");
+          throw new Error('Product quantity is zero');
         }
 
         return tx.product.update({
@@ -214,11 +221,11 @@ export const processOrder = async (
 
       const stockUpdateResults = await Promise.all(updateStock);
 
-      stockUpdateResults.forEach((result) => {
+      for (const result of stockUpdateResults) {
         if (result.stock < 0) {
-          throw new Error("Product out of stock");
+          throw new Error('Product out of stock');
         }
-      });
+      }
 
       const order = await tx.order.create({
         data: {
@@ -255,7 +262,7 @@ export const processOrder = async (
       }));
 
       if (!address.country) {
-        throw new Error("Country is required");
+        throw new Error('Country is required');
       }
 
       const { country, ...rest } = address;
@@ -281,7 +288,7 @@ export const processOrder = async (
       },
     };
   } catch (error) {
-    return handleError(error, "Failed to process order. Please try again.");
+    return handleError(error, 'Failed to process order. Please try again.');
   }
 };
 
@@ -299,7 +306,7 @@ export const setOrderPaid = async (orderId: string, transactionId: string) => {
     if (!order) {
       return {
         success: false,
-        message: "Order not found",
+        message: 'Order not found',
       };
     }
 
@@ -307,6 +314,6 @@ export const setOrderPaid = async (orderId: string, transactionId: string) => {
       success: true,
     };
   } catch (error) {
-    return handleError(error, "Failed to process order. Please try again.");
+    return handleError(error, 'Failed to process order. Please try again.');
   }
 };

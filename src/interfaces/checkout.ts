@@ -1,4 +1,4 @@
-import type { ProductSize } from "./shared";
+import type { ProductSize } from './shared';
 
 export interface ProductToOrder {
   id: string;

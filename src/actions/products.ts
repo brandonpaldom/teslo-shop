@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import type { ProductGender } from "@/interfaces";
-import { prisma } from "@/lib/prisma";
+import type { ProductGender } from '@/interfaces';
+import { prisma } from '@/lib/prisma';
 
 interface PaginationParams {
   page?: number;
@@ -35,9 +35,8 @@ export const getProductBySlug = async (slug: string) => {
       ...product,
       price,
     };
-  } catch (error) {
-    console.error("Failed to fetch product:", error);
-    throw new Error("Failed to fetch product. Please try again.");
+  } catch (_error) {
+    throw new Error('Failed to fetch product. Please try again.');
   }
 };
 
@@ -46,7 +45,7 @@ export const getProductsPagination = async ({
   limit = 12,
   gender,
 }: PaginationParams) => {
-  if (isNaN(Number(page)) || page < 1) {
+  if (Number.isNaN(Number(page)) || page < 1) {
     page = 1;
   }
 
@@ -61,7 +60,7 @@ export const getProductsPagination = async ({
             url: true,
           },
           orderBy: {
-            url: "asc",
+            url: 'asc',
           },
         },
       },
@@ -94,9 +93,8 @@ export const getProductsPagination = async ({
       totalPages,
       products: formattedProducts,
     };
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
-    throw new Error("Failed to fetch products. Please try again.");
+  } catch (_error) {
+    throw new Error('Failed to fetch products. Please try again.');
   }
 };
 
@@ -104,13 +102,12 @@ export const getProductCategories = async () => {
   try {
     const categories = await prisma.productCategory.findMany({
       orderBy: {
-        name: "asc",
+        name: 'asc',
       },
     });
 
     return categories;
-  } catch (error) {
-    console.error("Failed to fetch product categories:", error);
-    throw new Error("Failed to fetch product categories. Please try again.");
+  } catch (_error) {
+    throw new Error('Failed to fetch product categories. Please try again.');
   }
 };

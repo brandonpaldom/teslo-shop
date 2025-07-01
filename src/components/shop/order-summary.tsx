@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Divider from "../ui/divider";
-import { formatCurrency } from "@/utils";
-import { useEffect, useState } from "react";
-import type { Address } from "@/interfaces";
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import type { Address } from '@/interfaces';
+import { formatCurrency } from '@/utils';
+import Divider from '../ui/divider';
 
 interface Props {
   totalItems: number;
@@ -22,7 +22,7 @@ export default function OrderSummary({
   subtotal,
   salesTax,
   totalDue,
-  shipping = "Free",
+  shipping = 'Free',
   shippingAddress,
   billingAddress,
   isEditable = false,
@@ -33,18 +33,20 @@ export default function OrderSummary({
     setIsClient(true);
   }, []);
 
-  if (!isClient) return null;
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <>
-      <h2 className="text-[1.25rem] font-semibold">
-        Order Summary ({totalItems} {totalItems === 1 ? "item" : "items"})
+      <h2 className="font-semibold text-[1.25rem]">
+        Order Summary ({totalItems} {totalItems === 1 ? 'item' : 'items'})
       </h2>
       <div className="flex flex-col gap-2 text-[0.875rem]">
         <div className="flex justify-between">
           <p>Shipping Address</p>
           {isEditable && (
-            <Link href="/checkout/address" className="underline">
+            <Link className="underline" href="/checkout/address">
               Edit
             </Link>
           )}
@@ -57,7 +59,7 @@ export default function OrderSummary({
             {shippingAddress.address} {shippingAddress.apartment}
           </p>
           <p>
-            {shippingAddress.city}, {shippingAddress.state}{" "}
+            {shippingAddress.city}, {shippingAddress.state}{' '}
             {shippingAddress.zipCode}
           </p>
           <p>{shippingAddress.country || shippingAddress.countryId}</p>
@@ -68,7 +70,7 @@ export default function OrderSummary({
         <div className="flex justify-between">
           <p>Billing Address</p>
           {isEditable && (
-            <Link href="/checkout/address" className="underline">
+            <Link className="underline" href="/checkout/address">
               Edit
             </Link>
           )}
@@ -81,7 +83,7 @@ export default function OrderSummary({
             {billingAddress.address} {billingAddress.apartment}
           </p>
           <p>
-            {billingAddress.city}, {billingAddress.state}{" "}
+            {billingAddress.city}, {billingAddress.state}{' '}
             {billingAddress.zipCode}
           </p>
         </div>
@@ -95,7 +97,7 @@ export default function OrderSummary({
         <div className="flex justify-between">
           <p>Shipping</p>
           <p>
-            {typeof shipping === "number" ? formatCurrency(shipping) : shipping}
+            {typeof shipping === 'number' ? formatCurrency(shipping) : shipping}
           </p>
         </div>
         <div className="flex justify-between">

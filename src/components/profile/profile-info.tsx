@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { updateUserProfile } from "@/actions/profile";
-import Button from "@/components/ui/button";
-import Input from "@/components/ui/form/input";
-import FormErrorMessage from "@/components/ui/form-error-message";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { updateUserProfile } from '@/actions/profile';
+import Button from '@/components/ui/button';
+import Input from '@/components/ui/form/input';
+import FormErrorMessage from '@/components/ui/form-error-message';
 
 const profileSchema = z.object({
   name: z
     .string()
-    .min(3, "Name must be at least 3 characters")
-    .max(50, "Name must be less than 50 characters"),
-  email: z.string().email("Invalid email address"),
+    .min(3, 'Name must be at least 3 characters')
+    .max(50, 'Name must be less than 50 characters'),
+  email: z.string().email('Invalid email address'),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -34,7 +34,7 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const {
     register,
     formState: { errors },
@@ -49,59 +49,57 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
   const onSubmit = async (formData: FormData) => {
     setIsSubmitting(true);
     setErrorMessage(null);
-    
+
     try {
       const result = await updateUserProfile(formData);
-      
+
       if (result.success) {
         router.refresh();
       } else {
-        setErrorMessage(result.message || "Failed to update profile");
+        setErrorMessage(result.message || 'Failed to update profile');
       }
-    } catch (error) {
-      console.error("Profile update error:", error);
-      setErrorMessage("An unexpected error occurred");
+    } catch (_error) {
+      setErrorMessage('An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="bg-white p-6 shadow-sm rounded-lg">
-      <h2 className="text-lg font-medium text-neutral-900 mb-4">Personal Information</h2>
-      
+    <div className="rounded-lg bg-white p-6 shadow-sm">
+      <h2 className="mb-4 font-medium text-lg text-neutral-900">
+        Personal Information
+      </h2>
+
       <form action={onSubmit} className="space-y-6">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <Input
-            label="Full Name"
             id="name"
-            {...register("name")}
+            label="Full Name"
+            {...register('name')}
             error={errors.name}
           />
           <Input
-            label="Email Address"
             id="email"
+            label="Email Address"
             type="email"
-            {...register("email")}
+            {...register('email')}
             error={errors.email}
           />
-          
+
           <div className="sm:col-span-2">
-            <p className="text-sm text-neutral-500">
-              Account Type: <span className="font-medium capitalize">{user.role}</span>
+            <p className="text-neutral-500 text-sm">
+              Account Type:{' '}
+              <span className="font-medium capitalize">{user.role}</span>
             </p>
           </div>
         </div>
-        
+
         {errorMessage && <FormErrorMessage message={errorMessage} />}
-        
+
         <div className="flex justify-end">
-          <Button 
-            type="submit" 
-            variant="primary" 
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Saving..." : "Save Changes"}
+          <Button disabled={isSubmitting} type="submit" variant="primary">
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       </form>

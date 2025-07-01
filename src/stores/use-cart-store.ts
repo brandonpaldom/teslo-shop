@@ -1,6 +1,6 @@
-import type { CartItem } from "@/interfaces";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import type { CartItem } from '@/interfaces';
 
 interface CartState {
   cartItems: CartItem[];
@@ -24,7 +24,7 @@ export const useCartStore = create<CartState>()(
           const { cartItems } = state;
 
           const existingItemIndex = cartItems.findIndex(
-            (item) => item.id === product.id && item.size === product.size,
+            (item) => item.id === product.id && item.size === product.size
           );
 
           if (existingItemIndex !== -1) {
@@ -44,17 +44,17 @@ export const useCartStore = create<CartState>()(
       removeItemFromCart: (id: string, size: string) =>
         set((state) => ({
           cartItems: state.cartItems.filter(
-            (item) => !(item.id === id && item.size === size),
+            (item) => !(item.id === id && item.size === size)
           ),
         })),
       getSummary: () => {
         const totalItems = get().cartItems.reduce(
-          (totalDue, item) => totalDue + item.quantity,
-          0,
+          (acc, item) => acc + item.quantity,
+          0
         );
         const subtotal = get().cartItems.reduce(
-          (totalDue, item) => totalDue + item.price * item.quantity,
-          0,
+          (acc, item) => acc + item.price * item.quantity,
+          0
         );
         const salesTax = subtotal * 0.07;
         const totalDue = subtotal + salesTax;
@@ -69,7 +69,7 @@ export const useCartStore = create<CartState>()(
       clearCart: () => set({ cartItems: [] }),
     }),
     {
-      name: "cart",
-    },
-  ),
+      name: 'cart',
+    }
+  )
 );

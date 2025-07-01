@@ -1,9 +1,9 @@
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-import { getAllOrders } from "@/actions/order";
-import { EmptyState, OrdersTable, Title } from "@/components";
-import { UserOrder } from "@/interfaces";
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
+import { getAllOrders } from '@/actions/order';
+import { EmptyState, OrdersTable, Title } from '@/components';
+import type { UserOrder } from '@/interfaces';
 
 export default async function AdminOrdersPage() {
   const { success, data } = await getAllOrders();
@@ -11,14 +11,14 @@ export default async function AdminOrdersPage() {
   const orders = data as UserOrder[];
 
   if (!success) {
-    redirect("/auth/login");
+    redirect('/auth/login');
   }
 
   if (orders.length === 0) {
     return (
       <EmptyState
-        title="No Orders Found"
         message="No orders have been placed yet."
+        title="No Orders Found"
       />
     );
   }

@@ -1,29 +1,33 @@
-"use server";
+'use server';
 
-import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
-import { handleError } from "@/utils";
-import { revalidatePath } from "next/cache";
-import bcryptjs from "bcryptjs";
-import { z } from "zod";
-import { v2 as cloudinary } from "cloudinary";
+import bcryptjs from 'bcryptjs';
+import { v2 as cloudinary } from 'cloudinary';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+import { auth } from '@/auth';
+import { prisma } from '@/lib/prisma';
+import { handleError } from '@/utils';
 
 const profileSchema = z.object({
   name: z
     .string()
-    .min(3, "Name must be at least 3 characters")
-    .max(50, "Name must be less than 50 characters"),
-  email: z.string().email("Invalid email address"),
+    .min(3, 'Name must be at least 3 characters')
+    .max(50, 'Name must be less than 50 characters'),
+  email: z.string().email('Invalid email address'),
 });
 
-const passwordSchema = z.object({
-  currentPassword: z.string().min(6, "Current password is required"),
-  newPassword: z.string().min(6, "New password must be at least 6 characters"),
-  confirmPassword: z.string().min(6, "Confirm password is required"),
-}).refine(data => data.newPassword === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
+const passwordSchema = z
+  .object({
+    currentPassword: z.string().min(6, 'Current password is required'),
+    newPassword: z
+      .string()
+      .min(6, 'New password must be at least 6 characters'),
+    confirmPassword: z.string().min(6, 'Confirm password is required'),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
 
 export const getUserProfile = async () => {
   const session = await auth();
@@ -32,7 +36,7 @@ export const getUserProfile = async () => {
   if (!userId) {
     return {
       success: false,
-      message: "User not authenticated.",
+      message: 'User not authenticated.',
     };
   }
 
@@ -57,7 +61,7 @@ export const getUserProfile = async () => {
     if (!user) {
       return {
         success: false,
-        message: "User not found.",
+        message: 'User not found.',
       };
     }
 
@@ -66,7 +70,10 @@ export const getUserProfile = async () => {
       data: user,
     };
   } catch (error) {
-    return handleError(error, "Failed to fetch user profile. Please try again.");
+    return handleError(
+      error,
+      'Failed to fetch user profile. Please try again.'
+    );
   }
 };
 
@@ -77,13 +84,13 @@ export const updateUserProfile = async (formData: FormData) => {
   if (!userId) {
     return {
       success: false,
-      message: "User not authenticated.",
+      message: 'User not authenticated.',
     };
   }
 
   try {
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
 
     const validatedData = profileSchema.parse({ name, email });
 
@@ -96,7 +103,7 @@ export const updateUserProfile = async (formData: FormData) => {
       if (existingUser && existingUser.id !== userId) {
         return {
           success: false,
-          message: "Email is already in use.",
+          message: 'Email is already in use.',
         };
       }
     }
@@ -109,7 +116,7 @@ export const updateUserProfile = async (formData: FormData) => {
       },
     });
 
-    revalidatePath("/profile");
+    revalidatePath('/profile');
 
     return {
       success: true,
@@ -117,19 +124,19 @@ export const updateUserProfile = async (formData: FormData) => {
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const fieldErrors = error.errors.map(err => ({
+      const fieldErrors = error.errors.map((err) => ({
         field: err.path.join('.'),
-        message: err.message
+        message: err.message,
       }));
-      
+
       return {
         success: false,
-        message: "Validation error",
-        fieldErrors
+        message: 'Validation error',
+        fieldErrors,
       };
     }
-    
-    return handleError(error, "Failed to update profile. Please try again.");
+
+    return handleError(error, 'Failed to update profile. Please try again.');
   }
 };
 
@@ -140,19 +147,19 @@ export const changePassword = async (formData: FormData) => {
   if (!userId) {
     return {
       success: false,
-      message: "User not authenticated.",
+      message: 'User not authenticated.',
     };
   }
 
   try {
-    const currentPassword = formData.get("currentPassword") as string;
-    const newPassword = formData.get("newPassword") as string;
-    const confirmPassword = formData.get("confirmPassword") as string;
+    const currentPassword = formData.get('currentPassword') as string;
+    const newPassword = formData.get('newPassword') as string;
+    const confirmPassword = formData.get('confirmPassword') as string;
 
-    const validatedData = passwordSchema.parse({ 
-      currentPassword, 
-      newPassword, 
-      confirmPassword 
+    const validatedData = passwordSchema.parse({
+      currentPassword,
+      newPassword,
+      confirmPassword,
     });
 
     // Verify current password
@@ -164,7 +171,7 @@ export const changePassword = async (formData: FormData) => {
     if (!user) {
       return {
         success: false,
-        message: "User not found.",
+        message: 'User not found.',
       };
     }
 
@@ -176,7 +183,7 @@ export const changePassword = async (formData: FormData) => {
     if (!isPasswordValid) {
       return {
         success: false,
-        message: "Current password is incorrect.",
+        message: 'Current password is incorrect.',
       };
     }
 
@@ -189,27 +196,27 @@ export const changePassword = async (formData: FormData) => {
       data: { password: hashedPassword },
     });
 
-    revalidatePath("/profile");
+    revalidatePath('/profile');
 
     return {
       success: true,
-      message: "Password updated successfully.",
+      message: 'Password updated successfully.',
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const fieldErrors = error.errors.map(err => ({
+      const fieldErrors = error.errors.map((err) => ({
         field: err.path.join('.'),
-        message: err.message
+        message: err.message,
       }));
-      
+
       return {
         success: false,
-        message: "Validation error",
-        fieldErrors
+        message: 'Validation error',
+        fieldErrors,
       };
     }
-    
-    return handleError(error, "Failed to change password. Please try again.");
+
+    return handleError(error, 'Failed to change password. Please try again.');
   }
 };
 
@@ -223,62 +230,52 @@ export const uploadProfileImage = async (formData: FormData) => {
   if (!userId) {
     return {
       success: false,
-      message: "User not authenticated.",
+      message: 'User not authenticated.',
     };
   }
 
   try {
-    // Log for debugging
-    console.log("Server action: uploadProfileImage called");
-    
-    const file = formData.get("image");
-    console.log("File received:", file ? "yes" : "no", typeof file);
-    
-    if (!file || !(file instanceof File)) {
-      console.error("Invalid file object received:", file);
+    const file = formData.get('image');
+
+    if (!(file && file instanceof File)) {
       return {
         success: false,
-        message: "No valid image provided.",
+        message: 'No valid image provided.',
       };
     }
 
-    console.log("Processing file:", file.name, file.type, file.size);
-
     // Get the file buffer and convert to base64
     const buffer = await file.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString("base64");
-    
+    const base64 = Buffer.from(buffer).toString('base64');
+
     // Upload to Cloudinary
-    console.log("Uploading to Cloudinary...");
     const result = await cloudinary.uploader.upload(
-      `data:${file.type};base64,${base64}`, 
+      `data:${file.type};base64,${base64}`,
       {
-        folder: "teslo-shop/profiles",
+        folder: 'teslo-shop/profiles',
         transformation: [
-          { width: 500, height: 500, crop: "fill", gravity: "face" }
+          { width: 500, height: 500, crop: 'fill', gravity: 'face' },
         ],
       }
     );
-    
-    console.log("Cloudinary upload successful:", result.secure_url);
 
     // Update user record with new image URL
     await prisma.user.update({
       where: { id: userId },
       data: { image: result.secure_url },
     });
-    
-    console.log("User record updated with new image URL");
 
-    revalidatePath("/profile");
+    revalidatePath('/profile');
 
     return {
       success: true,
       imageUrl: result.secure_url,
     };
   } catch (error) {
-    console.error("Profile image upload error:", error);
-    return handleError(error, "Failed to upload profile image. Please try again.");
+    return handleError(
+      error,
+      'Failed to upload profile image. Please try again.'
+    );
   }
 };
 
@@ -290,7 +287,7 @@ export const updateUserImage = async (imageUrl: string) => {
   if (!userId) {
     return {
       success: false,
-      message: "User not authenticated.",
+      message: 'User not authenticated.',
     };
   }
 
@@ -300,13 +297,16 @@ export const updateUserImage = async (imageUrl: string) => {
       data: { image: imageUrl },
     });
 
-    revalidatePath("/profile");
+    revalidatePath('/profile');
 
     return {
       success: true,
       data: { image: imageUrl },
     };
   } catch (error) {
-    return handleError(error, "Failed to update profile image. Please try again.");
+    return handleError(
+      error,
+      'Failed to update profile image. Please try again.'
+    );
   }
 };

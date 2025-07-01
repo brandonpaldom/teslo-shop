@@ -1,10 +1,11 @@
-"use server";
+'use server';
 
-import { Product, ProductSize } from "@/interfaces";
-import { prisma } from "@/lib/prisma";
-import { productSchema } from "@/schemas";
-import { v2 as cloudinary } from "cloudinary";
-import { revalidatePath } from "next/cache";
+import type { Product as PrismaProduct } from '@prisma/client';
+import { v2 as cloudinary } from 'cloudinary';
+import { revalidatePath } from 'next/cache';
+import type { ProductSize } from '@/interfaces';
+import { prisma } from '@/lib/prisma';
+import { productSchema } from '@/schemas';
 
 cloudinary.config(process.env.CLOUDINARY_URL as string);
 
@@ -13,23 +14,21 @@ const uploadImages = async (images: File[]) => {
     const uploadPromises = images.map(async (image) => {
       try {
         const buffer = await image.arrayBuffer();
-        const base64 = Buffer.from(buffer).toString("base64");
+        const base64 = Buffer.from(buffer).toString('base64');
         return cloudinary.uploader
           .upload(`data:image/jpg;base64,${base64}`, {
-            folder: "teslo-shop",
+            folder: 'teslo-shop',
             use_filename: true,
           })
           .then((result) => result.secure_url);
-      } catch (error) {
-        console.error("Error uploading image:", error);
+      } catch (_error) {
         return null;
       }
     });
 
     const uploadedImages = await Promise.all(uploadPromises);
     return uploadedImages;
-  } catch (error) {
-    console.error("Error uploading images:", error);
+  } catch (_error) {
     return null;
   }
 };
@@ -43,7 +42,6 @@ export const createOrUpdateProduct = async (formData: FormData) => {
   });
 
   if (!parsedData.success) {
-    console.log(parsedData.error);
     return {
       success: false,
     };
@@ -54,13 +52,13 @@ export const createOrUpdateProduct = async (formData: FormData) => {
 
   try {
     const prismaTx = await prisma.$transaction(async (tx) => {
-      let product: Product;
+      let createdProduct: PrismaProduct;
       const tagList = productData.tags
-        ? productData.tags.split(",").map((tag) => tag.trim().toLowerCase())
+        ? productData.tags.split(',').map((tag) => tag.trim().toLowerCase())
         : [];
 
       if (id) {
-        product = await tx.product.update({
+        createdProduct = await tx.product.update({
           where: { id },
           data: {
             ...productData,
@@ -74,7 +72,7 @@ export const createOrUpdateProduct = async (formData: FormData) => {
           },
         });
       } else {
-        product = await tx.product.create({
+        createdProduct = await tx.product.create({
           data: {
             ...productData,
             size: {
@@ -87,27 +85,27 @@ export const createOrUpdateProduct = async (formData: FormData) => {
         });
       }
 
-      if (formData.getAll("images")) {
-        const images = await uploadImages(formData.getAll("images") as File[]);
+      if (formData.getAll('images')) {
+        const images = await uploadImages(formData.getAll('images') as File[]);
 
         if (!images) {
-          throw new Error("Error uploading images");
+          throw new Error('Error uploading images');
         }
 
-        await prisma.productImage.createMany({
+        await tx.productImage.createMany({
           data: images.map((url) => ({
             url: url as string,
-            productId: product.id!,
+            productId: createdProduct.id,
           })),
         });
       }
 
       return {
-        product,
+        product: createdProduct,
       };
     });
 
-    revalidatePath("/admin/products");
+    revalidatePath('/admin/products');
     revalidatePath(`/admin/product/${product.slug}`);
     revalidatePath(`/product/${product.slug}`);
 
@@ -118,8 +116,7 @@ export const createOrUpdateProduct = async (formData: FormData) => {
         price: Number(prismaTx.product.price),
       },
     };
-  } catch (error) {
-    console.error("Error creating/updating product:", error);
+  } catch (_error) {
     return {
       success: false,
     };
@@ -134,7 +131,7 @@ export const deleteImage = async (imageId: string, imageUrl: string) => {
     };
   }
 
-  const publicId = imageUrl.split("/").slice(-1)[0].split(".")[0] ?? "";
+  const publicId = imageUrl.split('/').at(-1)?.split('.')[0] ?? '';
 
   try {
     await cloudinary.uploader.destroy(`teslo-shop/${publicId}`);
@@ -153,14 +150,13 @@ export const deleteImage = async (imageId: string, imageUrl: string) => {
     });
 
     const { slug } = deletedImage.product;
-    revalidatePath("/admin/products");
+    revalidatePath('/admin/products');
     revalidatePath(`/admin/product/${slug}`);
     revalidatePath(`/product/${slug}`);
-  } catch (error) {
-    console.error("Error deleting image:", error);
+  } catch (_error) {
     return {
       success: false,
-      message: "Error deleting image",
+      message: 'Error deleting image',
     };
   }
 };

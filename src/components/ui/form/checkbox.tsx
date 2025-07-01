@@ -1,5 +1,5 @@
-import clsx from "clsx";
-import { UseFormRegisterReturn } from "react-hook-form";
+import clsx from 'clsx';
+import type { UseFormRegisterReturn } from 'react-hook-form';
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -10,7 +10,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 export default function Checkbox({
   label,
   id,
-  type = "checkbox",
+  type = 'checkbox',
   value,
   onChange,
   required = false,
@@ -19,18 +19,18 @@ export default function Checkbox({
   ...props
 }: Props) {
   return (
-    <label htmlFor={id} className="flex items-center gap-2">
+    <label className="flex items-center gap-2" htmlFor={id}>
       <input
-        type={type}
         id={id}
-        value={value}
         onChange={onChange}
         required={required}
+        type={type}
+        value={value}
         {...register}
-        className={clsx("checkbox", className)}
+        className={clsx('checkbox', className)}
         {...props}
       />
-      <span className="text-[0.875rem] font-semibold text-neutral-500">
+      <span className="font-semibold text-[0.875rem] text-neutral-500">
         {label}
       </span>
     </label>

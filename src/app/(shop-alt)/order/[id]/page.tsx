@@ -1,4 +1,5 @@
-import { getOrderById } from "@/actions/order";
+import { redirect } from 'next/navigation';
+import { getOrderById } from '@/actions/order';
 import {
   Divider,
   OrderSummary,
@@ -6,9 +7,8 @@ import {
   PayPalButton,
   ProductList,
   Title,
-} from "@/components";
-import { Address, ProductSize } from "@/interfaces";
-import { redirect } from "next/navigation";
+} from '@/components';
+import type { Address, ProductSize } from '@/interfaces';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -18,8 +18,8 @@ export default async function OrderPage({ params }: Props) {
   const id = (await params).id;
   const { success, data } = await getOrderById(id);
 
-  if (!success || !data) {
-    redirect("/");
+  if (!(success && data)) {
+    redirect('/');
   }
 
   const order = data;
@@ -46,12 +46,12 @@ export default async function OrderPage({ params }: Props) {
         <Divider className="lg:hidden" />
         <div className="lg:card flex h-fit flex-col gap-4">
           <OrderSummary
-            totalItems={order.totalItems}
-            subtotal={order.subtotal}
-            salesTax={order.salesTax}
-            totalDue={order.totalDue}
-            shippingAddress={address}
             billingAddress={address}
+            salesTax={order.salesTax}
+            shippingAddress={address}
+            subtotal={order.subtotal}
+            totalDue={order.totalDue}
+            totalItems={order.totalItems}
           />
           {order.isPaid ? (
             <PaymentStatus isPaid={order.isPaid} />

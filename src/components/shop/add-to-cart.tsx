@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import QuantitySelector from "./quantity-selector";
-import SizeSelector from "./size-selector";
-import Button from "../ui/button";
+import Link from 'next/link';
+import { useState } from 'react';
 import type {
   CartItem,
   Product,
   ProductImage,
   ProductSize,
-} from "@/interfaces";
-import { useState } from "react";
-import { useCartStore } from "@/stores";
-import Link from "next/link";
+} from '@/interfaces';
+import { useCartStore } from '@/stores';
+import Button from '../ui/button';
+import QuantitySelector from './quantity-selector';
+import SizeSelector from './size-selector';
 
 interface Props {
   product: Product;
@@ -24,18 +24,24 @@ export default function AddToCart({ product }: Props) {
   const [isInCart, setIsInCart] = useState(false);
 
   const handleAddToCart = () => {
+    // Get the product image
+    let productImage: string | undefined;
+    if (product.images && product.images.length > 0) {
+      const firstImage = product.images[0];
+      if (typeof firstImage === 'string') {
+        productImage = firstImage;
+      } else {
+        productImage = (firstImage as ProductImage).url;
+      }
+    }
+
     const productToAdd: CartItem = {
-      id: product.id ?? "",
+      id: product.id ?? '',
       name: product.name,
       price: product.price as number,
       quantity,
       size: selectedSize as ProductSize,
-      image:
-        product.images && product.images.length > 0
-          ? typeof product.images[0] === "string"
-            ? product.images[0]
-            : (product.images[0] as ProductImage).url
-          : undefined,
+      image: productImage,
     };
 
     addItemToCart(productToAdd);
@@ -47,45 +53,45 @@ export default function AddToCart({ product }: Props) {
   return (
     <>
       <div className="mt-6">
-        <p className="mb-2 text-[0.875rem] font-semibold leading-none">Size</p>
+        <p className="mb-2 font-semibold text-[0.875rem] leading-none">Size</p>
         <SizeSelector
-          selectedSize={selectedSize}
           availableSizes={product.size}
-          stockQuantity={product.stock}
           onSizeSelection={setSelectedSize}
+          selectedSize={selectedSize}
+          stockQuantity={product.stock}
         />
       </div>
       {product.stock !== 0 ? (
         <div className="my-6">
-          <p className="mb-2 text-[0.875rem] font-semibold leading-none">
+          <p className="mb-2 font-semibold text-[0.875rem] leading-none">
             Quantity
           </p>
           <QuantitySelector
-            quantity={quantity}
-            onQuantityChange={setQuantity}
             maxQuantity={product.stock}
+            onQuantityChange={setQuantity}
+            quantity={quantity}
           />
         </div>
       ) : (
-        <p className="mb-2 mt-6 text-[0.875rem] font-semibold">
+        <p className="mt-6 mb-2 font-semibold text-[0.875rem]">
           This item is out of stock
         </p>
       )}
       {product.stock !== 0 && (
         <Button
-          onClick={handleAddToCart}
-          variant="primary"
-          size="lg"
           className="w-full sm:w-[320px]"
           disabled={!selectedSize || product.stock === 0}
+          onClick={handleAddToCart}
+          size="lg"
+          variant="primary"
         >
           Add to Cart
         </Button>
       )}
       {isInCart && (
         <Link
+          className="btn-lg btn-secondary mt-4 w-full font-semibold text-sm sm:w-[320px]"
           href="/cart"
-          className="btn-lg btn-secondary mt-4 w-full text-sm font-semibold sm:w-[320px]"
         >
           Go to Cart
         </Link>

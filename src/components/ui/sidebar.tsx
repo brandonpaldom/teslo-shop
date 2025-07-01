@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
-import SidebarClient from "./sidebar-client";
+import { auth } from '@/auth';
+import SidebarClient from './sidebar-client';
 
 export default async function Sidebar() {
   const session = await auth();
   const isLogged = !!session?.user;
-  const isAdmin = session?.user?.role === "admin";
+  const isAdmin = session?.user?.role === 'admin';
 
-  return <SidebarClient isLogged={isLogged} isAdmin={isAdmin} />;
+  return <SidebarClient isAdmin={isAdmin} isLogged={isLogged} />;
 }

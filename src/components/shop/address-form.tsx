@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { type AddressData, addressSchema } from "@/schemas";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type SubmitHandler, useForm } from "react-hook-form";
-import Button from "../ui/button";
-import type { Address, Country } from "@/interfaces";
-import { useAddressStore } from "@/stores";
-import { useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { createAddress, removeAddress } from "@/actions/checkout";
-import { useRouter } from "next/navigation";
-import Input from "../ui/form/input";
-import Select from "../ui/form/select";
-import Checkbox from "../ui/form/checkbox";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { createAddress, removeAddress } from '@/actions/checkout';
+import type { Address, Country } from '@/interfaces';
+import { type AddressData, addressSchema } from '@/schemas';
+import { useAddressStore } from '@/stores';
+import Button from '../ui/button';
+import Checkbox from '../ui/form/checkbox';
+import Input from '../ui/form/input';
+import Select from '../ui/form/select';
 
 interface Props {
   countries: Country[];
@@ -20,7 +20,11 @@ interface Props {
   onSubmitSuccess?: () => void;
 }
 
-export default function AddressForm({ countries, addressData = {}, onSubmitSuccess }: Props) {
+export default function AddressForm({
+  countries,
+  addressData = {},
+  onSubmitSuccess,
+}: Props) {
   const router = useRouter();
   const {
     register,
@@ -43,8 +47,7 @@ export default function AddressForm({ countries, addressData = {}, onSubmitSucce
     if (address.firstName) {
       reset(address);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [address, reset]);
 
   const onSubmit: SubmitHandler<AddressData> = async (data: AddressData) => {
     const { saveAddress, ...rest } = data;
@@ -59,84 +62,86 @@ export default function AddressForm({ countries, addressData = {}, onSubmitSucce
     if (onSubmitSuccess) {
       onSubmitSuccess();
     } else {
-      router.push("/checkout");
+      router.push('/checkout');
     }
   };
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:max-w-[768px]"
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Input
-        label="First Name"
-        id="firstName"
-        register={register("firstName")}
         error={errors.firstName}
+        id="firstName"
+        label="First Name"
+        register={register('firstName')}
       />
       <Input
-        label="Last Name"
-        id="lastName"
-        register={register("lastName")}
         error={errors.lastName}
+        id="lastName"
+        label="Last Name"
+        register={register('lastName')}
       />
       <Input
-        label="Address"
-        id="address"
-        register={register("address")}
         error={errors.address}
+        id="address"
+        label="Address"
+        register={register('address')}
       />
       <Input
-        label="Apartment, suite, etc. (optional)"
-        id="apartment"
-        register={register("apartment")}
         error={errors.apartment}
+        id="apartment"
+        label="Apartment, suite, etc. (optional)"
+        register={register('apartment')}
       />
       <Input
-        label="Zip Code"
-        id="zipCode"
-        register={register("zipCode")}
         error={errors.zipCode}
+        id="zipCode"
+        label="Zip Code"
+        register={register('zipCode')}
       />
       <Input
-        label="City"
-        id="city"
-        register={register("city")}
         error={errors.city}
+        id="city"
+        label="City"
+        register={register('city')}
       />
       <Input
-        label="State"
-        id="state"
-        register={register("state")}
         error={errors.state}
+        id="state"
+        label="State"
+        register={register('state')}
       />
       <Select
-        label="Country"
-        id="country"
-        register={register("country")}
         error={errors.country}
+        id="country"
+        label="Country"
+        register={register('country')}
       >
-        {Array.isArray(countries) ? countries.map((country) => (
-          <option key={country.id} value={country.id}>
-            {country.name}
-          </option>
-        )) : (
+        {Array.isArray(countries) ? (
+          countries.map((country) => (
+            <option key={country.id} value={country.id}>
+              {country.name}
+            </option>
+          ))
+        ) : (
           <option value="">No countries available</option>
         )}
       </Select>
       <Input
-        label="Phone Number"
-        id="phone"
-        type="tel"
-        register={register("phone")}
         error={errors.phone}
+        id="phone"
+        label="Phone Number"
+        register={register('phone')}
+        type="tel"
       />
       <Checkbox
-        label="Save this information for next time"
         id="saveAddress"
-        register={register("saveAddress")}
+        label="Save this information for next time"
+        register={register('saveAddress')}
       />
-      <Button variant="primary" size="lg" disabled={isSubmitting}>
+      <Button disabled={isSubmitting} size="lg" variant="primary">
         Continue to Payment
       </Button>
     </form>

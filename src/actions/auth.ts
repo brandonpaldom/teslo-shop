@@ -1,30 +1,29 @@
-"use server";
+'use server';
 
-import { signIn, signOut } from "@/auth";
-import { prisma } from "@/lib/prisma";
-import { AuthError } from "next-auth";
-import bcryptjs from "bcryptjs";
-import { registerBaseSchema } from "@/schemas";
+import bcryptjs from 'bcryptjs';
+import { AuthError } from 'next-auth';
+import { signIn, signOut } from '@/auth';
+import { prisma } from '@/lib/prisma';
+import { registerBaseSchema } from '@/schemas';
 
 export const login = async (
-  prevState: string | undefined,
-  formData: FormData,
+  _prevState: string | undefined,
+  formData: FormData
 ) => {
   try {
-    await signIn("credentials", {
+    await signIn('credentials', {
       ...Object.fromEntries(formData),
       redirect: false,
     });
 
-    return "Success";
+    return 'Success';
   } catch (error) {
-    console.error(error);
     if (error instanceof AuthError) {
       switch (error.type) {
-        case "CredentialsSignin":
-          return "Invalid credentials.";
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
         default:
-          return "Something went wrong.";
+          return 'Something went wrong.';
       }
     }
     throw error;
@@ -32,13 +31,13 @@ export const login = async (
 };
 
 export const logout = async () => {
-  await signOut({ redirectTo: "/" });
+  await signOut({ redirectTo: '/' });
 };
 
 export const registerUser = async (
   name: string,
   email: string,
-  password: string,
+  password: string
 ) => {
   try {
     const user = await prisma.user.create({
@@ -57,21 +56,21 @@ export const registerUser = async (
     return {
       ok: true,
       user,
-      message: "User created successfully.",
+      message: 'User created successfully.',
     };
   } catch (error) {
-    console.error("Error in registerUser", error);
-    if (error instanceof Error) {
-      if (error.message.includes("Unique constraint failed")) {
-        return {
-          ok: false,
-          message: "Email already exists.",
-        };
-      }
+    if (
+      error instanceof Error &&
+      error.message.includes('Unique constraint failed')
+    ) {
+      return {
+        ok: false,
+        message: 'Email already exists.',
+      };
     }
     return {
       ok: false,
-      message: "Something went wrong.",
+      message: 'Something went wrong.',
     };
   }
 };
@@ -92,16 +91,15 @@ export const authenticate = async (email: string, password: string) => {
       };
     }
 
-    await signIn("credentials", { email, password });
+    await signIn('credentials', { email, password });
     return {
       ok: true,
-      message: "Successfully authenticated",
+      message: 'Successfully authenticated',
     };
-  } catch (error) {
-    console.error("Error in authenticate", error);
+  } catch (_error) {
     return {
       ok: false,
-      message: "Invalid credentials",
+      message: 'Invalid credentials',
     };
   }
 };

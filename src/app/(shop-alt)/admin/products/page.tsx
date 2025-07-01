@@ -1,6 +1,6 @@
-import { getProductsPagination } from "@/actions/products";
-import { Pagination, ProductsTable, Title } from "@/components";
-import Link from "next/link";
+import Link from 'next/link';
+import { getProductsPagination } from '@/actions/products';
+import { Pagination, ProductsTable, Title } from '@/components';
 
 interface Props {
   searchParams: Promise<{
@@ -23,7 +23,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
     <div className="mx-auto grid max-w-[640px] grid-cols-1 gap-6 p-6 lg:max-w-[1024px]">
       <div className="flex w-full items-center justify-between">
         <Title title="All Products" />
-        <Link href="/admin/product/create" className="btn btn-primary">
+        <Link className="btn btn-primary" href="/admin/product/create">
           Create Product
         </Link>
       </div>

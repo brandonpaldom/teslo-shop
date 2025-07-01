@@ -1,6 +1,6 @@
-import { getAllUser } from "@/actions/user";
-import { Title, UsersTable } from "@/components";
-import { User } from "@/interfaces";
+import { getAllUser } from '@/actions/user';
+import { Title, UsersTable } from '@/components';
+import type { User } from '@/interfaces';
 
 export default async function AdminUsersPage() {
   const { data } = await getAllUser();

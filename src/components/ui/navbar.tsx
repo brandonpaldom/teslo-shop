@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useCartStore, useUIStore } from "@/stores";
-import Image from "next/image";
-import Link from "next/link";
-import { IoCartOutline, IoSearchOutline } from "react-icons/io5";
-import Button from "./button";
-import { useEffect, useState } from "react";
-import { useShallow } from "zustand/shallow";
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { IoCartOutline, IoSearchOutline } from 'react-icons/io5';
+import { useShallow } from 'zustand/shallow';
+import { useCartStore, useUIStore } from '@/stores';
+import Button from './button';
 
 export default function Navbar() {
   const isSidebarOpen = useUIStore((state) => state.isSidebarOpen);
   const { totalItems } = useCartStore(
-    useShallow((state) => state.getSummary()),
+    useShallow((state) => state.getSummary())
   );
   const [isClient, setIsClient] = useState(false);
 
@@ -26,45 +26,45 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-10 flex h-14 items-center justify-between bg-white px-4">
       <div className="flex items-center">
-        <Link href="/" className="mr-8">
+        <Link className="mr-8" href="/">
           <Image
-            src="/teslo-logo.svg"
             alt="Teslo logo"
-            width={99}
             height={10}
+            src="/teslo-logo.svg"
+            width={99}
           />
         </Link>
         <span className="mr-4 text-sm">|</span>
-        <Link href="/" className="btn btn-ghost">
+        <Link className="btn btn-ghost" href="/">
           Shop
         </Link>
       </div>
       <div className="hidden items-center sm:flex">
-        <Link href="/category/men" className="btn btn-ghost">
+        <Link className="btn btn-ghost" href="/category/men">
           Men
         </Link>
-        <Link href="/category/women" className="btn btn-ghost">
+        <Link className="btn btn-ghost" href="/category/women">
           Women
         </Link>
-        <Link href="/category/kids" className="btn btn-ghost">
+        <Link className="btn btn-ghost" href="/category/kids">
           Kids
         </Link>
       </div>
       <div className="flex items-center">
-        <button className="mr-4 hidden xl:flex">
+        <button className="mr-4 hidden xl:flex" type="button">
           <IoSearchOutline className="h-6 w-6" />
         </button>
         <div className="relative mr-2">
-          <Link href="/cart" className="flex">
+          <Link className="flex" href="/cart">
             <IoCartOutline className="h-6 w-6" />
             {isClient && totalItems > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[0.75rem] leading-none text-white">
+              <span className="-right-1 -top-1 absolute flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[0.75rem] text-white leading-none">
                 {totalItems}
               </span>
             )}
           </Link>
         </div>
-        <Button variant="ghost" onClick={handleSidebar}>
+        <Button onClick={handleSidebar} variant="ghost">
           Menu
         </Button>
       </div>

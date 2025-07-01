@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { updateUserRole } from "@/actions/user";
-import { User } from "@/interfaces";
-import EmptyState from "../ui/empty-state";
+import { updateUserRole } from '@/actions/user';
+import type { User } from '@/interfaces';
+import EmptyState from '../ui/empty-state';
 
 interface Props {
   users: User[];
@@ -12,8 +12,8 @@ export default function UsersTable({ users }: Props) {
   if (!users || users.length === 0) {
     return (
       <EmptyState
-        title="No Users Found"
         message="There are no users to display."
+        title="No Users Found"
       />
     );
   }
@@ -31,7 +31,7 @@ export default function UsersTable({ users }: Props) {
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id} className="border-b bg-white hover:bg-neutral-50">
+            <tr className="border-b bg-white hover:bg-neutral-50" key={user.id}>
               <td className="px-6 py-4 font-medium text-neutral-900">
                 {user.id}
               </td>
@@ -39,11 +39,11 @@ export default function UsersTable({ users }: Props) {
               <td className="px-6 py-4">{user.email}</td>
               <td className="px-6 py-4">
                 <select
-                  value={user.role}
-                  onChange={(e) =>
-                    updateUserRole(user.id, e.target.value as "admin" | "user")
-                  }
                   className="input w-32"
+                  onChange={(e) =>
+                    updateUserRole(user.id, e.target.value as 'admin' | 'user')
+                  }
+                  value={user.role}
                 >
                   <option value="user">User</option>
                   <option value="admin">Admin</option>

@@ -1,6 +1,6 @@
-import { auth } from "@/auth";
-import { AdminBanner, Footer, Navbar, Sidebar } from "@/components";
-import clsx from "clsx";
+import clsx from 'clsx';
+import { auth } from '@/auth';
+import { AdminBanner, Footer, Navbar, Sidebar } from '@/components';
 
 export default async function ShopAltLayout({
   children,
@@ -8,13 +8,13 @@ export default async function ShopAltLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  const isAdmin = session?.user.role === "admin";
+  const isAdmin = session?.user.role === 'admin';
 
   return (
     <div
-      className={clsx("grid min-h-screen", {
-        "grid-rows-[auto_auto_1fr_auto]": isAdmin,
-        "grid-rows-[auto_1fr_auto]": !isAdmin,
+      className={clsx('grid min-h-screen', {
+        'grid-rows-[auto_auto_1fr_auto]': isAdmin,
+        'grid-rows-[auto_1fr_auto]': !isAdmin,
       })}
     >
       <Navbar />

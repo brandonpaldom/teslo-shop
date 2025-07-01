@@ -1,8 +1,8 @@
-import { Product } from "@/interfaces";
-import { formatCurrency } from "@/utils";
-import Link from "next/link";
-import ImagePlaceholder from "../ui/image-placeholder";
-import EmptyState from "../ui/empty-state";
+import Link from 'next/link';
+import type { Product } from '@/interfaces';
+import { formatCurrency } from '@/utils';
+import EmptyState from '../ui/empty-state';
+import ImagePlaceholder from '../ui/image-placeholder';
 
 interface Props {
   products: Product[];
@@ -12,8 +12,8 @@ export default function ProductsTable({ products }: Props) {
   if (!products || products.length === 0) {
     return (
       <EmptyState
-        title="No products found"
         message="You can create a new product by clicking the button above."
+        title="No products found"
       />
     );
   }
@@ -35,22 +35,22 @@ export default function ProductsTable({ products }: Props) {
         <tbody>
           {products.map((product) => (
             <tr
-              key={product.id}
               className="border-b bg-white hover:bg-neutral-50"
+              key={product.id}
             >
               <td className="px-6 py-4">
                 <ImagePlaceholder
-                  src={(product.images?.[0] as string) || ""}
                   alt={product.name}
-                  width={48}
-                  height={48}
                   className="h-12 w-12 rounded-lg object-cover"
+                  height={48}
+                  src={(product.images?.[0] as string) || ''}
+                  width={48}
                 />
               </td>
               <td className="px-6 py-4">
                 <Link
-                  href={`/product/${product.slug}`}
                   className="font-semibold text-primary hover:underline"
+                  href={`/product/${product.slug}`}
                 >
                   {product.name}
                 </Link>
@@ -60,11 +60,11 @@ export default function ProductsTable({ products }: Props) {
               </td>
               <td className="px-6 py-4">{product.gender}</td>
               <td className="px-6 py-4">{product.stock}</td>
-              <td className="px-6 py-4">{product.size.join(", ")}</td>
+              <td className="px-6 py-4">{product.size.join(', ')}</td>
               <td className="px-6 py-4">
                 <Link
-                  href={`/admin/product/${product.slug}`}
                   className="font-semibold text-primary hover:underline"
+                  href={`/admin/product/${product.slug}`}
                 >
                   Edit
                 </Link>

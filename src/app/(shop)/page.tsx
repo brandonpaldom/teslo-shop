@@ -1,8 +1,8 @@
 export const revalidate = 60;
 
-import { getProductsPagination } from "@/actions/products";
-import { Pagination, ProductsGrid, Title } from "@/components";
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
+import { getProductsPagination } from '@/actions/products';
+import { Pagination, ProductsGrid, Title } from '@/components';
 
 interface Props {
   searchParams: Promise<{
@@ -22,12 +22,12 @@ export default async function ShopPage({ searchParams }: Props) {
   });
 
   if (!products.length) {
-    redirect("/");
+    redirect('/');
   }
 
   return (
     <>
-      <Title title="Shop" subtitle="All products" className="mb-10" />
+      <Title className="mb-10" subtitle="All products" title="Shop" />
       <ProductsGrid products={products} />
       <div className="mt-10 flex justify-center">
         <Pagination totalPages={totalPages} />

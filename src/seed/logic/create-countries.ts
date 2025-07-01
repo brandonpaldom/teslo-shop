@@ -1,5 +1,5 @@
-import { prisma } from "../../lib/prisma";
-import { initialData } from "../data/seed";
+import { prisma } from '../../lib/prisma';
+import { initialData } from '../data/seed';
 
 export const createCountries = async () => {
   const { countries } = initialData;

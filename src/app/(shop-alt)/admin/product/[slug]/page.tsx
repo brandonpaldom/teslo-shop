@@ -1,6 +1,6 @@
-import { getProductBySlug, getProductCategories } from "@/actions/products";
-import { ProductForm, Title } from "@/components";
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
+import { getProductBySlug, getProductCategories } from '@/actions/products';
+import { ProductForm, Title } from '@/components';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -14,16 +14,16 @@ export default async function AdminProductPage({ params }: Props) {
     getProductCategories(),
   ]);
 
-  if (!product && slug !== "create") {
-    redirect("/admin/products");
+  if (!product && slug !== 'create') {
+    redirect('/admin/products');
   }
 
-  const title = slug === "create" ? "Create Product" : "Edit Product";
+  const title = slug === 'create' ? 'Create Product' : 'Edit Product';
 
   return (
     <div className="mx-auto grid max-w-[640px] grid-cols-1 gap-6 p-6">
       <Title title={title} />
-      <ProductForm product={product} categories={categories} />
+      <ProductForm categories={categories} product={product} />
     </div>
   );
 }

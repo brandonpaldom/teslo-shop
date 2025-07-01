@@ -1,6 +1,6 @@
-import { CartItem } from "@/interfaces";
-import { formatCurrency } from "@/utils";
-import ImagePlaceholder from "../ui/image-placeholder";
+import type { CartItem } from '@/interfaces';
+import { formatCurrency } from '@/utils';
+import ImagePlaceholder from '../ui/image-placeholder';
 
 interface Props {
   product: CartItem;
@@ -14,13 +14,13 @@ export default function ProductListItem({
   showRemove = false,
 }: Props) {
   return (
-    <div key={product.id} className="flex items-center gap-4">
+    <div className="flex items-center gap-4" key={product.id}>
       <ImagePlaceholder
-        src={product.image as string}
         alt={product.name}
-        width={80}
-        height={80}
         className="rounded-md"
+        height={80}
+        src={product.image as string}
+        width={80}
       />
 
       <div className="flex w-full items-start justify-between gap-4 text-[0.875rem]">
@@ -31,13 +31,14 @@ export default function ProductListItem({
           </p>
           <div className="flex gap-4">
             <p>
-              Quantity:{" "}
+              Quantity:{' '}
               <span className="font-semibold">{product.quantity}</span>
             </p>
             {showRemove && (
               <button
-                onClick={() => onRemove && onRemove(product.id, product.size)}
                 className="underline"
+                onClick={() => onRemove?.(product.id, product.size)}
+                type="button"
               >
                 Remove
               </button>

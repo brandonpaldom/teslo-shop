@@ -14,9 +14,8 @@ export type Response<T> = SuccessResponse<T> | ErrorResponse;
 
 export const handleError = (
   error: unknown,
-  defaultMessage: string,
+  defaultMessage: string
 ): ErrorResponse => {
-  console.error(defaultMessage, error);
   return {
     success: false,
     message: defaultMessage,

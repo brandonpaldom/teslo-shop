@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Button from "../ui/button";
-import { authenticate, registerUser } from "@/actions/auth";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { type RegisterData, registerSchema } from "@/schemas";
-import FormErrorMessage from "../ui/form-error-message";
-import Input from "../ui/form/input";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import { authenticate, registerUser } from '@/actions/auth';
+import { type RegisterData, registerSchema } from '@/schemas';
+import Button from '../ui/button';
+import Input from '../ui/form/input';
+import FormErrorMessage from '../ui/form-error-message';
 
 export default function RegisterForm() {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const {
     register,
     handleSubmit,
@@ -22,7 +22,7 @@ export default function RegisterForm() {
   });
 
   const onSubmit: SubmitHandler<RegisterData> = async (data) => {
-    setErrorMessage("");
+    setErrorMessage('');
     try {
       const { name, email, password } = data;
       const response = await registerUser(name, email, password);
@@ -33,50 +33,49 @@ export default function RegisterForm() {
       }
 
       await authenticate(email, password);
-      router.replace("/");
-    } catch (error) {
-      console.error("Registration error:", error);
-      setErrorMessage("Something went wrong.");
+      router.replace('/');
+    } catch (_error) {
+      setErrorMessage('Something went wrong.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-6">
+    <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit(onSubmit)}>
       <Input
-        label="Name"
-        id="name"
-        register={register("name")}
         error={errors.name}
+        id="name"
+        label="Name"
+        register={register('name')}
       />
       <Input
-        label="Email"
-        id="email"
-        type="email"
-        register={register("email")}
         error={errors.email}
+        id="email"
+        label="Email"
+        register={register('email')}
+        type="email"
       />
       <Input
-        label="Password"
-        id="password"
-        type="password"
-        register={register("password")}
         error={errors.password}
+        id="password"
+        label="Password"
+        register={register('password')}
+        type="password"
       />
       <Input
-        label="Confirm Password"
-        id="confirmPassword"
-        type="password"
-        register={register("confirmPassword")}
         error={errors.confirmPassword}
+        id="confirmPassword"
+        label="Confirm Password"
+        register={register('confirmPassword')}
+        type="password"
       />
       <p className="text-[0.75rem] text-neutral-500">
-        By creating an account you agree to our{" "}
-        <span className="underline">Terms of Service</span> and{" "}
+        By creating an account you agree to our{' '}
+        <span className="underline">Terms of Service</span> and{' '}
         <span className="underline">Privacy Policy</span>.
       </p>
       <FormErrorMessage message={errorMessage} />
-      <Button variant="primary" size="lg" disabled={isSubmitting}>
-        {isSubmitting ? "Creating Account..." : "Create Account"}
+      <Button disabled={isSubmitting} size="lg" variant="primary">
+        {isSubmitting ? 'Creating Account...' : 'Create Account'}
       </Button>
     </form>
   );

@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 
 interface Props {
   title: string;
@@ -8,8 +8,8 @@ interface Props {
 
 export default function Title({ title, subtitle, className }: Props) {
   return (
-    <div className={clsx("flex flex-col gap-10", className)}>
-      <h1 className="text-[1.5rem] font-bold capitalize leading-tight">
+    <div className={clsx('flex flex-col gap-10', className)}>
+      <h1 className="font-bold text-[1.5rem] capitalize leading-tight">
         {title}
       </h1>
       {subtitle && (

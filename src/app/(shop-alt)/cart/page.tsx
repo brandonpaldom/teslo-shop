@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Divider, ProductList, Title } from "@/components";
-import { useCartStore } from "@/stores";
-import { formatCurrency } from "@/utils";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useShallow } from "zustand/shallow";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useShallow } from 'zustand/shallow';
+import { Divider, ProductList, Title } from '@/components';
+import { useCartStore } from '@/stores';
+import { formatCurrency } from '@/utils';
 
 export default function CartPage() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function CartPage() {
 
   useEffect(() => {
     if (cartItems.length === 0 && isClient) {
-      router.replace("/cart/empty");
+      router.replace('/cart/empty');
     }
   }, [cartItems, isClient, router]);
 
@@ -35,13 +35,13 @@ export default function CartPage() {
       <Divider className="lg:hidden" />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_400px] lg:gap-24">
         <ProductList
-          products={cartItems}
           onRemove={handleRemoveItem}
+          products={cartItems}
           showRemove
         />
         <Divider className="lg:hidden" />
         <div className="lg:card flex h-fit flex-col gap-4">
-          <h2 className="text-[1.25rem] font-semibold">Order Summary</h2>
+          <h2 className="font-semibold text-[1.25rem]">Order Summary</h2>
           <div className="flex justify-between text-[0.875rem]">
             <p>Shipping</p>
             <p>Free</p>
@@ -54,7 +54,7 @@ export default function CartPage() {
             <h2 className="text-[1.25rem]">Subtotal</h2>
             {isClient && <p>{formatCurrency(subtotal)}</p>}
           </div>
-          <Link href="/checkout/address" className="btn-lg btn-primary">
+          <Link className="btn-lg btn-primary" href="/checkout/address">
             Checkout
           </Link>
         </div>

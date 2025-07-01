@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useRef } from "react";
-import Image from "next/image";
-import { uploadProfileImageBase64 } from "@/actions/upload";
-import { IoPersonCircleOutline, IoCamera } from "react-icons/io5";
-import Button from "../ui/button";
-import { useRouter } from "next/navigation";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
+import { IoCamera, IoPersonCircleOutline } from 'react-icons/io5';
+import { uploadProfileImageBase64 } from '@/actions/upload';
+import Button from '../ui/button';
 
 interface ProfileHeaderProps {
   user: {
@@ -26,12 +26,14 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     // Create a preview
     const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreviewImage(e.target?.result as string);
+    reader.onload = (event) => {
+      setPreviewImage(event.target?.result as string);
       setShowPreview(true);
     };
     reader.readAsDataURL(file);
@@ -39,135 +41,133 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
   const handleImageUpload = async () => {
     if (!previewImage) {
-      setError("No image selected");
+      setError('No image selected');
       return;
     }
-    
+
     setIsUploading(true);
     setError(null);
 
     try {
-      console.log("Starting image upload with base64...");
-      
       // Upload the base64 image directly
       const result = await uploadProfileImageBase64(previewImage);
-      console.log("Upload result:", result);
-      
+
       if (result.success) {
-        console.log("Upload successful, image URL:", result.imageUrl);
         setShowPreview(false);
         setPreviewImage(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+
         // Refresh the page to show the new image
         router.refresh();
       } else {
-        console.error("Upload failed:", result.message);
-        setError(result.message || "Failed to upload image");
+        setError(result.message || 'Failed to upload image');
       }
-    } catch (err) {
-      console.error("Error during upload:", err);
-      setError("Failed to upload image. Please try again.");
+    } catch (_err) {
+      setError('Failed to upload image. Please try again.');
     } finally {
       setIsUploading(false);
     }
   };
-  
+
   const cancelUpload = () => {
     setShowPreview(false);
     setPreviewImage(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
-    <div className="bg-white p-6 shadow-sm rounded-lg">
+    <div className="rounded-lg bg-white p-6 shadow-sm">
       {showPreview ? (
-        <div className="flex flex-col items-center gap-4 mb-6">
+        <div className="mb-6 flex flex-col items-center gap-4">
           <div className="relative">
             {previewImage && (
               <>
                 <Image
-                  src={previewImage}
                   alt="Preview"
-                  width={200}
+                  className={`h-40 w-40 rounded-full border-4 border-primary object-cover ${isUploading ? 'opacity-50' : ''}`}
                   height={200}
-                  className={`rounded-full h-40 w-40 object-cover border-4 border-primary ${isUploading ? 'opacity-50' : ''}`}
+                  src={previewImage}
+                  width={200}
                 />
                 {isUploading && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    <div className="h-8 w-8 animate-spin rounded-full border-primary border-b-2" />
                   </div>
                 )}
               </>
             )}
           </div>
           <div className="flex gap-4">
-            <Button 
-              variant="primary" 
+            <Button
+              disabled={isUploading}
               onClick={handleImageUpload}
-              disabled={isUploading}
               type="button"
+              variant="primary"
             >
-              {isUploading ? "Uploading..." : "Save Profile Picture"}
+              {isUploading ? 'Uploading...' : 'Save Profile Picture'}
             </Button>
-            <Button 
-              variant="outline" 
-              onClick={cancelUpload}
+            <Button
               disabled={isUploading}
+              onClick={cancelUpload}
               type="button"
+              variant="outline"
             >
               Cancel
             </Button>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col sm:flex-row items-center gap-6">
+        <div className="flex flex-col items-center gap-6 sm:flex-row">
           <div className="relative">
             {user.image ? (
               <Image
-                src={user.image}
                 alt={user.name}
-                width={96}
+                className="h-24 w-24 rounded-full object-cover"
                 height={96}
-                className="rounded-full h-24 w-24 object-cover"
+                src={user.image}
+                width={96}
               />
             ) : (
-              <div className="rounded-full bg-neutral-100 h-24 w-24 flex items-center justify-center">
+              <div className="flex h-24 w-24 items-center justify-center rounded-full bg-neutral-100">
                 <IoPersonCircleOutline className="h-16 w-16 text-neutral-400" />
               </div>
             )}
-            
-            <label 
-              htmlFor="profile-image" 
-              className="absolute bottom-0 right-0 bg-primary text-white p-1.5 rounded-full cursor-pointer hover:bg-primary/90 transition-colors"
+
+            <label
+              className="absolute right-0 bottom-0 cursor-pointer rounded-full bg-primary p-1.5 text-white transition-colors hover:bg-primary/90"
+              htmlFor="profile-image"
             >
               <IoCamera className="h-4 w-4" />
             </label>
-            <input 
-              type="file" 
-              id="profile-image" 
-              className="hidden" 
+            <input
               accept="image/*"
-              onChange={handleImageSelect}
+              className="hidden"
               disabled={isUploading}
+              id="profile-image"
+              onChange={handleImageSelect}
               ref={fileInputRef}
+              type="file"
             />
           </div>
-          
+
           <div className="text-center sm:text-left">
-            <h1 className="text-2xl font-bold text-neutral-900">{user.name}</h1>
+            <h1 className="font-bold text-2xl text-neutral-900">{user.name}</h1>
             <p className="text-neutral-500">{user.email}</p>
             <div className="mt-2">
-              <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 capitalize">
+              <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 font-medium text-blue-700 text-xs capitalize">
                 {user.role}
               </span>
             </div>
           </div>
         </div>
       )}
-      
+
       {error && (
-        <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-md text-sm">
+        <div className="mt-4 rounded-md bg-red-50 p-3 text-red-700 text-sm">
           {error}
         </div>
       )}

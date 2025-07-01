@@ -1,4 +1,4 @@
-import type { ProductSize } from "./shared";
+import type { ProductSize } from './shared';
 
 export interface CartItem {
   id: string;

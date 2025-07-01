@@ -1,6 +1,6 @@
-import { AuthNavbar, Footer } from "@/components";
+import { AuthNavbar, Footer } from '@/components';
 
-export default async function AuthLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

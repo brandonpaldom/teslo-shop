@@ -1,6 +1,6 @@
-import { auth } from "@/auth";
-import { Title } from "@/components";
-import Link from "next/link";
+import Link from 'next/link';
+import { auth } from '@/auth';
+import { Title } from '@/components';
 
 export default async function EmptyCartPage() {
   const session = await auth();
@@ -11,13 +11,13 @@ export default async function EmptyCartPage() {
       <div className="flex flex-col items-center gap-6 md:max-w-[768px] md:items-start">
         <h2>Your cart is empty.</h2>
         <div className="flex w-[320px] flex-col gap-4 md:w-fit md:flex-row">
-          <Link href="/" className="btn-lg btn-primary md:w-[320px]">
+          <Link className="btn-lg btn-primary md:w-[320px]" href="/">
             Continue Shopping
           </Link>
           {!session && (
             <Link
-              href="/auth/login"
               className="btn-lg btn-outline md:w-[320px]"
+              href="/auth/login"
             >
               Login
             </Link>

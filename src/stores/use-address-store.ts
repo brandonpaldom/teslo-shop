@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface AddressStore {
   address: {
@@ -14,21 +14,21 @@ interface AddressStore {
     phone: string;
     saveAddress?: boolean;
   };
-  setAddress: (address: AddressStore["address"]) => void;
+  setAddress: (address: AddressStore['address']) => void;
 }
 
 export const useAddressStore = create<AddressStore>()(
   persist(
     (set) => ({
       address: {
-        firstName: "",
-        lastName: "",
-        address: "",
-        zipCode: "",
-        city: "",
-        state: "",
-        country: "",
-        phone: "",
+        firstName: '',
+        lastName: '',
+        address: '',
+        zipCode: '',
+        city: '',
+        state: '',
+        country: '',
+        phone: '',
         saveAddress: false,
       },
       setAddress: (address) =>
@@ -37,7 +37,7 @@ export const useAddressStore = create<AddressStore>()(
         }),
     }),
     {
-      name: "address",
-    },
-  ),
+      name: 'address',
+    }
+  )
 );
